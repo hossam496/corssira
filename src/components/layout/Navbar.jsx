@@ -5,7 +5,7 @@ import { Bell, Search, Sun, Moon, Menu, ChevronDown, User, Settings, LogOut, X }
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import api from '../../api/axios';
-import socket, { joinUserRoom } from '../../services/socket';
+import { subscribeToWebPush } from '../../services/pushService';
 
 const Navbar = ({ onMenuToggle, sidebarCollapsed }) => {
   const { user, logout } = useAuth();
@@ -30,28 +30,22 @@ const Navbar = ({ onMenuToggle, sidebarCollapsed }) => {
       } catch { /* silent */ }
     };
     fetchNotifs();
+    
+    // Fallback polling for UI updates since we use WebPush now for actual alerts
+    const interval = setInterval(fetchNotifs, 15000);
 
     if (user?._id) {
-      joinUserRoom(user._id);
-
-      const handleNewNotification = (data) => {
-        // Assume data contains the new notification
-        const newNotif = data.notification || data;
-        setNotifications(prev => {
-          const updated = [newNotif, ...prev];
-          return updated.slice(0, 5); // Keep only latest 5
+      // Ask for push notification permission and subscribe
+      if ('Notification' in window) {
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            subscribeToWebPush();
+          }
         });
-        setUnread(prev => prev + 1);
-      };
-
-      socket.on('newEnrollment', handleNewNotification);
-      socket.on('newNotification', handleNewNotification);
-
-      return () => {
-        socket.off('newEnrollment', handleNewNotification);
-        socket.off('newNotification', handleNewNotification);
-      };
+      }
     }
+    
+    return () => clearInterval(interval);
   }, [user]);
 
   useEffect(() => {
