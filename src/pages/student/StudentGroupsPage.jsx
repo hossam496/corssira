@@ -4,7 +4,6 @@ import { useAuth } from '../../context/AuthContext';
 import { UsersRound, MapPin, Clock, CalendarDays, CheckCircle2, AlertCircle, ArrowRight, BookOpen, GraduationCap, Users, Loader2, Star, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../api/axios';
-import socket from '../../services/socket';
 
 const formatTime12h = (time24) => {
   if (!time24) return '';
@@ -41,17 +40,6 @@ const StudentGroupsPage = () => {
 
   useEffect(() => {
     fetchData();
-
-    socket.on('group_capacity_update', (data) => {
-      setGroups(prevGroups => prevGroups.map(g => {
-        if (g._id === data.groupId) {
-          return { ...g, enrolledStudents: new Array(data.enrolledCount).fill('placeholder'), status: data.status };
-        }
-        return g;
-      }));
-    });
-
-    return () => socket.off('group_capacity_update');
   }, []);
 
   const handleEnroll = async (groupId) => {

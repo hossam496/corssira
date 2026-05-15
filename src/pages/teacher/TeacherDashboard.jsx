@@ -5,7 +5,6 @@ import { Bell, Search, Filter, TrendingUp, Users, BookOpen, Star, Clock, Chevron
 import NotificationDropdown from '../../components/NotificationDropdown';
 import { useAuth } from '../../context/AuthContext';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import socket, { joinUserRoom } from '../../services/socket';
 import { NavLink } from 'react-router-dom';
 
 const TeacherDashboard = () => {
@@ -42,14 +41,6 @@ const TeacherDashboard = () => {
   useEffect(() => {
     if (user) {
       fetchData();
-      joinUserRoom(user._id);
-
-      socket.on('newEnrollment', ({ enrollment }) => {
-        setRecentEnrollments(prev => [enrollment, ...prev]);
-        setNotifCount(prev => prev + 1);
-      });
-
-      return () => socket.off('newEnrollment');
     }
   }, [user]);
 

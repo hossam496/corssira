@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, X, Check, Trash2, Clock, UserPlus } from 'lucide-react';
 import api from '../api/axios';
-import socket from '../services/socket';
 import { useAuth } from '../context/AuthContext';
 
 const NotificationDropdown = ({ isOpen, onClose, onNewNotification }) => {
@@ -19,18 +18,15 @@ const NotificationDropdown = ({ isOpen, onClose, onNewNotification }) => {
   };
 
   useEffect(() => {
-    if (user) {
+    if (user && isOpen) {
       fetchNotifications();
-
-      // Listen for real-time notifications
-      socket.on('newEnrollment', ({ notification }) => {
-        setNotifications(prev => [notification, ...prev]);
-        if (onNewNotification) onNewNotification();
-      });
-
-      return () => socket.off('newEnrollment');
     }
-  }, [user]);
+    
+    if (user) {
+      const interval = setInterval(fetchNotifications, 15000);
+      return () => clearInterval(interval);
+    }
+  }, [user, isOpen]);
 
   const markAsRead = async (id) => {
     try {
