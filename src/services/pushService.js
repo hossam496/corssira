@@ -3,7 +3,7 @@ import api from '../api/axios';
 const urlBase64ToUint8Array = (base64String) => {
   const padding = '='.repeat((4 - base64String.length % 4) % 4);
   const base64 = (base64String + padding)
-    .replace(/\-/g, '+')
+    .replace(/-/g, '+')
     .replace(/_/g, '/');
 
   const rawData = window.atob(base64);
@@ -32,9 +32,11 @@ export const subscribeToWebPush = async () => {
         return null;
       }
 
+      console.log('Subscribing to push with key:', publicVapidKey.trim());
+
       subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
+        applicationServerKey: urlBase64ToUint8Array(publicVapidKey.trim())
       });
     }
 
