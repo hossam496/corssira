@@ -4,7 +4,8 @@ import { useAuth } from '../../context/AuthContext';
 import { 
   User, Mail, Phone, MapPin, Camera, Save, 
   Plus, Search, Filter, BookOpen, Trash2, 
-  ChevronRight, Award, TrendingUp, Clock 
+  ChevronRight, Award, TrendingUp, Clock,
+  Bell, CheckCircle, AlertCircle, RefreshCw
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { SUBJECT_CATEGORIES } from '../../data/mockData';
@@ -13,6 +14,7 @@ import SubjectModal from '../../components/SubjectModal';
 import EnrollmentCard from '../../components/EnrollmentCard';
 import EnrolledSubjectCard from '../../components/EnrolledSubjectCard';
 import api from '../../api/axios';
+import { subscribeToWebPush } from '../../services/pushService';
 
 const ProfilePage = () => {
   const { user, updateUser } = useAuth();
@@ -186,10 +188,12 @@ const ProfilePage = () => {
   const tabs = user?.role === 'teacher' ? [
     { id: 'personal', label: 'المعلومات الشخصية', icon: User },
     { id: 'subjects', label: 'المواد الدراسية الخاصة بي', icon: BookOpen },
+    { id: 'notifications', label: 'الإشعارات والتنبيهات', icon: Bell },
   ] : [
     { id: 'personal', label: 'المعلومات الشخصية', icon: User },
     { id: 'enrolled', label: 'المواد المسجلة', icon: BookOpen },
     { id: 'enrollment', label: 'تسجيل مواد جديدة', icon: Plus },
+    { id: 'notifications', label: 'الإشعارات والتنبيهات', icon: Bell },
   ];
 
   const roleColors = { admin: 'text-accent-blue', teacher: 'text-accent-green', student: 'text-accent-purple' };
@@ -385,6 +389,73 @@ const ProfilePage = () => {
                       isEnrolled={enrolledSubjects.some(es => es._id === s._id)} 
                     />
                   ))}
+                </div>
+              </motion.div>
+            )}
+
+            {activeTab === 'notifications' && (
+              <motion.div 
+                key="notifications" 
+                initial={{ opacity: 0, x: -20 }} 
+                animate={{ opacity: 1, x: 0 }} 
+                exit={{ opacity: 0, x: -20 }} 
+                className="bg-bg-card border border-border rounded-3xl p-8 shadow-lg"
+              >
+                <div className="flex items-center gap-3 mb-8 border-b border-border pb-4">
+                  <Bell className="text-accent-blue" size={24} />
+                  <span className="text-xl font-black text-text-primary">إعدادات التنبيهات</span>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="p-6 bg-accent-blue/5 rounded-2xl border border-accent-blue/10">
+                    <h3 className="font-black text-text-primary mb-2">تنبيهات المتصفح (Web Push)</h3>
+                    <p className="text-sm text-text-secondary leading-relaxed mb-6">
+                      تسمح لك هذه الخاصية باستقبال التنبيهات مباشرة على جهازك حتى عند إغلاق المنصة. 
+                      إذا كنت تواجه مشاكل في استقبال التنبيهات، يمكنك محاولة إعادة الضبط.
+                    </p>
+
+                    <div className="flex flex-wrap gap-4">
+                      <button 
+                        onClick={async () => {
+                          const res = await subscribeToWebPush();
+                          if (res) toast.success('تم تفعيل التنبيهات بنجاح! 🔔');
+                          else toast.error('فشل تفعيل التنبيهات. تأكد من إعطاء الصلاحية للمتصفح.');
+                        }}
+                        className="btn btn-primary px-6 py-3 rounded-xl"
+                      >
+                        <CheckCircle size={18} /> تفعيل التنبيهات الآن
+                      </button>
+
+                      <button 
+                        onClick={async () => {
+                          try {
+                            const reg = await navigator.serviceWorker.ready;
+                            const sub = await reg.pushManager.getSubscription();
+                            if (sub) await sub.unsubscribe();
+                            toast.success('تم إلغاء الاشتراك. يمكنك الآن التفعيل مجدداً.');
+                          } catch (e) {
+                            toast.error('حدث خطأ أثناء إلغاء الاشتراك');
+                          }
+                        }}
+                        className="btn btn-ghost border border-border px-6 py-3 rounded-xl text-text-secondary"
+                      >
+                        <RefreshCw size={18} /> إعادة ضبط الاشتراك
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="p-6 bg-bg-secondary rounded-2xl border border-border">
+                    <div className="flex items-start gap-4">
+                      <AlertCircle className="text-accent-amber shrink-0" size={20} />
+                      <div>
+                        <h4 className="font-bold text-text-primary mb-1 text-sm">ملاحظة لمستخدمي Windows / Chrome</h4>
+                        <p className="text-xs text-text-muted leading-relaxed">
+                          إذا استمر ظهور خطأ (AbortError)، يرجى التأكد من أنك تستخدم رابط <span className="text-accent-blue font-bold">localhost</span> وليس IP داخلي، 
+                          وأن إعدادات "توفير الطاقة" في المتصفح لا تمنع خدمات التنبيهات.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             )}
