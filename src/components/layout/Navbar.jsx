@@ -5,6 +5,7 @@ import { Bell, Search, Sun, Moon, Menu, ChevronDown, User, Settings, LogOut, X }
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import api from '../../api/axios';
+import socket, { joinUserRoom } from '../../services/socket';
 
 const Navbar = ({ onMenuToggle, sidebarCollapsed }) => {
   const { user, logout } = useAuth();
@@ -24,13 +25,34 @@ const Navbar = ({ onMenuToggle, sidebarCollapsed }) => {
       try {
         const { data } = await api.get('/notifications');
         setNotifications(data.data?.slice(0, 5) || []);
-        setUnread(data.unread || 0);
+        setUnread(data.data?.filter(n => !n.read).length || 0); // Count unread from data if API unread is missing
+        if (data.unread !== undefined) setUnread(data.unread);
       } catch { /* silent */ }
     };
     fetchNotifs();
-    const interval = setInterval(fetchNotifs, 30000);
-    return () => clearInterval(interval);
-  }, []);
+
+    if (user?._id) {
+      joinUserRoom(user._id);
+
+      const handleNewNotification = (data) => {
+        // Assume data contains the new notification
+        const newNotif = data.notification || data;
+        setNotifications(prev => {
+          const updated = [newNotif, ...prev];
+          return updated.slice(0, 5); // Keep only latest 5
+        });
+        setUnread(prev => prev + 1);
+      };
+
+      socket.on('newEnrollment', handleNewNotification);
+      socket.on('newNotification', handleNewNotification);
+
+      return () => {
+        socket.off('newEnrollment', handleNewNotification);
+        socket.off('newNotification', handleNewNotification);
+      };
+    }
+  }, [user]);
 
   useEffect(() => {
     const handleClick = (e) => {
