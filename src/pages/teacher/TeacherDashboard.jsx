@@ -63,26 +63,29 @@ const TeacherDashboard = () => {
   return (
     <div className="page-container max-w-[1400px]">
       {/* Header Section */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
-        <div>
-          <h1 className="text-3xl font-black text-text-primary mb-2">مرحباً د. {profile?.user?.name.split(' ')[0]} 👋</h1>
-          <p className="text-text-secondary font-medium">إليك ملخص أداء طلابك ونشاطك اليوم</p>
+      <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-6 mb-8 md:mb-10">
+        <div className="text-center md:text-right w-full">
+          <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
+            <h1 className="text-3xl md:text-4xl font-black text-text-primary">مرحباً د. {profile?.user?.name.split(' ')[0]}</h1>
+            <span className="text-3xl md:text-4xl inline-block hover:animate-pulse origin-bottom-right">👋</span>
+          </div>
+          <p className="text-text-secondary font-medium text-sm md:text-base">إليك ملخص أداء طلابك ونشاطك اليوم</p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center justify-between w-full md:w-auto gap-4 bg-bg-card/30 md:bg-transparent p-4 md:p-0 rounded-3xl md:rounded-none border border-white/5 md:border-none">
           <div className="relative">
             <button
               onClick={() => setIsNotifOpen(!isNotifOpen)}
-              className="w-11 h-11 flex items-center justify-center bg-bg-card border border-border rounded-xl text-text-secondary hover:text-accent-blue transition-colors relative"
+              className="w-12 h-12 flex items-center justify-center bg-white/5 border border-white/10 rounded-2xl text-text-secondary hover:text-accent-blue transition-colors relative"
             >
-              <Bell size={20} />
-              {notifCount > 0 && <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-accent-red rounded-full border-2 border-bg-card" />}
+              <Bell size={22} />
+              {notifCount > 0 && <span className="absolute top-3 right-3 w-2.5 h-2.5 bg-accent-red rounded-full border-2 border-bg-card shadow-[0_0_8px_var(--accent-red)] animate-pulse" />}
             </button>
             <NotificationDropdown isOpen={isNotifOpen} onClose={() => setIsNotifOpen(false)} onNewNotification={() => setNotifCount(prev => prev + 1)} />
           </div>
           <img 
             src={user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${profile?.user?.name}`} 
             alt="avatar" 
-            className="w-11 h-11 rounded-xl border-2 border-accent-blue shadow-lg object-cover" 
+            className="w-16 h-16 md:w-14 md:h-14 rounded-full md:rounded-2xl border-4 md:border-2 border-white/5 md:border-accent-blue shadow-lg object-cover" 
           />
         </div>
       </div>
@@ -113,15 +116,15 @@ const TeacherDashboard = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
         {/* Grades Distribution */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.98 }} 
           animate={{ opacity: 1, scale: 1 }} 
-          className="bg-bg-card border border-border rounded-[2rem] p-8 shadow-xl"
+          className="bg-bg-card border border-border rounded-3xl md:rounded-[2rem] p-6 md:p-8 shadow-xl flex flex-col"
         >
-          <div className="flex justify-between items-center mb-8">
-            <h3 className="text-xl font-black text-text-primary">توزيع الدرجات العام</h3>
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+            <h3 className="text-lg md:text-xl font-black text-text-primary">توزيع الدرجات العام</h3>
             <div className="flex items-center gap-2 text-xs font-black text-accent-blue bg-accent-blue/5 px-3 py-1.5 rounded-full border border-accent-blue/10">
                <Activity size={14} className="animate-pulse" /> تحديث تلقائي
             </div>
@@ -150,10 +153,10 @@ const TeacherDashboard = () => {
         <motion.div 
           initial={{ opacity: 0, scale: 0.98 }} 
           animate={{ opacity: 1, scale: 1 }} 
-          className="bg-bg-card border border-border rounded-[2rem] overflow-hidden shadow-xl flex flex-col"
+          className="bg-bg-card border border-border rounded-3xl md:rounded-[2rem] overflow-hidden shadow-xl flex flex-col"
         >
-          <div className="p-8 border-b border-border flex justify-between items-center bg-bg-card/50">
-            <h3 className="text-xl font-black text-text-primary">آخر طلبات الالتحاق</h3>
+          <div className="p-6 md:p-8 border-b border-border flex justify-between items-center bg-bg-card/50">
+            <h3 className="text-lg md:text-xl font-black text-text-primary">آخر طلبات الالتحاق</h3>
             <button className="text-accent-blue hover:text-accent-blue-light text-xs font-black uppercase tracking-wider flex items-center gap-1">
               عرض الكل <ChevronLeft size={14} />
             </button>

@@ -82,16 +82,19 @@ const StudentDashboard = () => {
       <motion.div 
         initial={{ opacity: 0, y: -20 }} 
         animate={{ opacity: 1, y: 0 }} 
-        className="flex justify-between items-center mb-10"
+        className="flex flex-col-reverse md:flex-row justify-between items-center gap-6 mb-8 md:mb-10"
       >
-        <div>
-          <h1 className="text-3xl font-black text-text-primary mb-2">مرحباً، {user?.name.split(' ')[0]} 👋</h1>
-          <p className="text-text-secondary font-medium">إليك نظرة سريعة على أدائك التعليمي</p>
+        <div className="text-center md:text-right w-full">
+          <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
+            <h1 className="text-3xl md:text-4xl font-black text-text-primary">مرحباً، {user?.name.split(' ')[0]}</h1>
+            <span className="text-3xl md:text-4xl inline-block hover:animate-pulse origin-bottom-right">👋</span>
+          </div>
+          <p className="text-text-secondary font-medium text-sm md:text-base">إليك نظرة سريعة على أدائك التعليمي</p>
         </div>
-        <div className="hidden md:block">
+        <div className="flex justify-center md:justify-end w-full md:w-auto">
             <img 
               src={user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`} 
-              className="w-14 h-14 rounded-2xl border-2 border-accent-blue shadow-lg object-cover" 
+              className="w-20 h-20 md:w-16 md:h-16 rounded-full md:rounded-2xl border-4 border-white/5 shadow-[0_0_20px_rgba(0,0,0,0.5)] object-cover" 
               alt="profile"
             />
         </div>
@@ -128,15 +131,15 @@ const StudentDashboard = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 mb-8">
         {/* Performance Chart */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.98 }} 
           animate={{ opacity: 1, scale: 1 }} 
-          className="lg:col-span-2 bg-bg-card border border-border rounded-[2.5rem] p-8 shadow-xl flex flex-col"
+          className="lg:col-span-2 bg-bg-card border border-border rounded-3xl md:rounded-[2.5rem] p-6 md:p-8 shadow-xl flex flex-col"
         >
           <div className="flex justify-between items-center mb-8">
-            <h3 className="text-xl font-black text-text-primary">مخطط الأداء الدراسي</h3>
+            <h3 className="text-lg md:text-xl font-black text-text-primary">مخطط الأداء الدراسي</h3>
             <NavLink to="/student/grades" className="w-10 h-10 bg-white/5 border border-border rounded-xl flex items-center justify-center text-text-muted hover:text-accent-blue hover:bg-accent-blue/10 transition-all">
               <ChevronLeft size={20} />
             </NavLink>
@@ -168,9 +171,9 @@ const StudentDashboard = () => {
         <motion.div 
           initial={{ opacity: 0, scale: 0.98 }} 
           animate={{ opacity: 1, scale: 1 }} 
-          className="bg-bg-card border border-border rounded-[2.5rem] p-8 shadow-xl flex flex-col"
+          className="bg-bg-card border border-border rounded-3xl md:rounded-[2.5rem] p-6 md:p-8 shadow-xl flex flex-col"
         >
-          <h3 className="text-xl font-black text-text-primary mb-8">سجل الحضور</h3>
+          <h3 className="text-lg md:text-xl font-black text-text-primary mb-8">سجل الحضور</h3>
           <div className="flex-1 flex flex-col justify-center gap-8">
             {[
               { label: 'حاضر', value: attendance.stats.present || 0, total: attendance.stats.total || 1, color: 'bg-accent-green', text: 'text-accent-green' },
@@ -198,10 +201,10 @@ const StudentDashboard = () => {
       <motion.div 
         initial={{ opacity: 0, y: 20 }} 
         animate={{ opacity: 1, y: 0 }} 
-        className="bg-bg-card border border-border rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col"
+        className="bg-bg-card border border-border rounded-3xl md:rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col"
       >
-        <div className="p-8 border-b border-border bg-bg-card/50 flex justify-between items-center">
-          <h3 className="text-xl font-black text-text-primary flex items-center gap-3">
+        <div className="p-6 md:p-8 border-b border-border bg-bg-card/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <h3 className="text-lg md:text-xl font-black text-text-primary flex items-center gap-3">
              <Award className="text-accent-blue" size={24} />
              آخر الدرجات المرصودة
           </h3>
