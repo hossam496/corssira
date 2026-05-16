@@ -19,19 +19,18 @@ export default defineConfig({
         name: 'منصة كورسيرا التعليمية',
         short_name: 'كورسيرا',
         description: 'منصة متكاملة لإدارة التعليم للطلاب والمدرسين',
-        theme_color: '#ffffff',
-        background_color: '#ffffff',
+        theme_color: '#3b82f6',
+        background_color: '#050915',
         display: 'standalone',
         start_url: '/',
-        gcm_sender_id: '103953800507',
         icons: [
           {
-            src: 'pwa-192x192.png',
+            src: 'logo.png',
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: 'pwa-512x512.png',
+            src: 'logo.png',
             sizes: '512x512',
             type: 'image/png'
           }

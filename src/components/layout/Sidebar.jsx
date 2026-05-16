@@ -66,7 +66,9 @@ const Sidebar = ({ role, collapsed, onToggle }) => {
               exit={{ opacity: 0, x: 20 }} 
               className="flex items-center gap-3"
             >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-blue to-accent-indigo flex items-center justify-center text-xl shadow-[0_0_20px_rgba(59,130,246,0.3)] shrink-0">🎓</div>
+              <div className="w-10 h-10 rounded-xl overflow-hidden shadow-[0_0_20px_rgba(59,130,246,0.3)] shrink-0 bg-white">
+                <img src="/logo.png" alt="Corssira Logo" className="w-full h-full object-contain" />
+              </div>
               <div>
                 <div className="font-black text-lg text-text-primary font-cairo leading-tight">كورسيرا</div>
                 <div className="text-[10px] text-text-muted font-bold uppercase tracking-widest">منصة تعليمية</div>
@@ -76,7 +78,9 @@ const Sidebar = ({ role, collapsed, onToggle }) => {
         </AnimatePresence>
         
         {collapsed && (
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent-blue to-accent-indigo flex items-center justify-center text-lg mx-auto shadow-md">🎓</div>
+          <div className="w-9 h-9 rounded-lg overflow-hidden mx-auto shadow-md bg-white">
+            <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+          </div>
         )}
 
         {!collapsed && (

@@ -43,7 +43,11 @@ const LoginPage = () => {
         <motion.div initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7 }} style={{ flex: 1, display: 'none' }} className="desktop-only">
           <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
             <div>
-              <div style={{ fontSize: 60, marginBottom: 16 }} className="animate-float">🎓</div>
+              <div style={{ marginBottom: 16 }} className="animate-float">
+                <div style={{ width: 80, height: 80, borderRadius: 20, overflow: 'hidden', background: 'white', padding: 8, boxShadow: '0 0 30px rgba(59,130,246,0.2)' }}>
+                  <img src="/logo.png" alt="Corssira" style={{ width: '100%', height: '100%', objectContain: 'contain' }} />
+                </div>
+              </div>
               <h1 style={{ fontSize: 42, fontWeight: 900, color: '#f0f4ff', lineHeight: 1.2, fontFamily: 'Cairo, sans-serif' }}>
                 مرحباً في<br />
                 <span style={{ background: 'linear-gradient(135deg, #60a5fa, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>كورسيرا</span>
@@ -68,7 +72,9 @@ const LoginPage = () => {
           <div style={{ background: 'rgba(10, 22, 40, 0.9)', border: '1px solid rgba(59,130,246,0.2)', borderRadius: 24, padding: 40, backdropFilter: 'blur(20px)', boxShadow: '0 40px 80px rgba(0,0,0,0.5)' }}>
             {/* Logo */}
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
-              <motion.div animate={{ y: [0, -6, 0] }} transition={{ duration: 3, repeat: Infinity }} style={{ width: 70, height: 70, borderRadius: 18, background: 'linear-gradient(135deg, #3b82f6, #6366f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, margin: '0 auto 16px', boxShadow: '0 0 40px rgba(59,130,246,0.3)' }}>🎓</motion.div>
+              <motion.div animate={{ y: [0, -6, 0] }} transition={{ duration: 3, repeat: Infinity }} style={{ width: 80, height: 80, borderRadius: 20, background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', boxShadow: '0 0 40px rgba(59,130,246,0.3)', overflow: 'hidden', padding: 8 }}>
+                <img src="/logo.png" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              </motion.div>
               <h2 style={{ fontSize: 26, fontWeight: 800, color: '#f0f4ff', fontFamily: 'Cairo, sans-serif', marginBottom: 6 }}>تسجيل الدخول</h2>
               <p style={{ color: '#64748b', fontSize: 14, fontFamily: 'Cairo, sans-serif' }}>ادخل إلى حسابك في منصة كورسيرا</p>
             </div>
