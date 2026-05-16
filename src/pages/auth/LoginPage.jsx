@@ -38,37 +38,7 @@ const LoginPage = () => {
         <div key={i} style={{ position: 'absolute', width: orb.size, height: orb.size, borderRadius: '50%', background: `radial-gradient(circle, ${orb.color} 0%, transparent 70%)`, filter: 'blur(40px)', top: orb.top, bottom: orb.bottom, left: orb.left, right: orb.right, pointerEvents: 'none' }} />
       ))}
 
-      <div style={{ display: 'flex', gap: 40, maxWidth: 1000, width: '100%', alignItems: 'center' }}>
-        {/* Left branding */}
-        <motion.div initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7 }} style={{ flex: 1, display: 'none' }} className="desktop-only">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
-            <div>
-              <div style={{ marginBottom: 16 }} className="animate-float">
-                <div style={{ width: 80, height: 80, borderRadius: 20, overflow: 'hidden', background: 'white', padding: 8, boxShadow: '0 0 30px rgba(59,130,246,0.2)' }}>
-                  <img src="/logo.png" alt="Corssira" style={{ width: '100%', height: '100%', objectContain: 'contain' }} />
-                </div>
-              </div>
-              <h1 style={{ fontSize: 42, fontWeight: 900, color: '#f0f4ff', lineHeight: 1.2, fontFamily: 'Cairo, sans-serif' }}>
-                مرحباً في<br />
-                <span style={{ background: 'linear-gradient(135deg, #60a5fa, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>كورسيرا</span>
-              </h1>
-              <p style={{ color: '#64748b', fontSize: 16, marginTop: 12, fontFamily: 'Cairo, sans-serif', lineHeight: 1.7 }}>منصة إدارة الطلاب والمدرسين الأكثر تطوراً في العالم العربي</p>
-            </div>
-            {[
-              { icon: '📊', text: 'لوحات تحليلية متقدمة' },
-              { icon: '🔔', text: 'إشعارات فورية ذكية' },
-              { icon: '🤖', text: 'مساعد ذكاء اصطناعي' },
-            ].map((f, i) => (
-              <motion.div key={i} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 + i * 0.1 }} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 18px', background: 'rgba(59,130,246,0.05)', border: '1px solid rgba(59,130,246,0.1)', borderRadius: 12 }}>
-                <span style={{ fontSize: 24 }}>{f.icon}</span>
-                <span style={{ color: '#94a3b8', fontSize: 14, fontFamily: 'Cairo, sans-serif', fontWeight: 600 }}>{f.text}</span>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Login Card */}
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} style={{ flex: 1, maxWidth: 460 }}>
+      <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} style={{ width: '100%', maxWidth: 460 }}>
           <div style={{ background: 'rgba(10, 22, 40, 0.9)', border: '1px solid rgba(59,130,246,0.2)', borderRadius: 24, padding: 40, backdropFilter: 'blur(20px)', boxShadow: '0 40px 80px rgba(0,0,0,0.5)' }}>
             {/* Logo */}
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
@@ -129,7 +99,6 @@ const LoginPage = () => {
             </p>
           </div>
         </motion.div>
-      </div>
     </div>
   );
 };
