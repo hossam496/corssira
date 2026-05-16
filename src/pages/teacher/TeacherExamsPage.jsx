@@ -113,7 +113,11 @@ const TeacherExamsPage = () => {
 
     setSaving(true);
     try {
-      const { data } = await api.post('/exams', form);
+      const payload = { ...form };
+      if (form.startTime) payload.startTime = new Date(form.startTime).toISOString();
+      if (form.endTime) payload.endTime = new Date(form.endTime).toISOString();
+      
+      const { data } = await api.post('/exams', payload);
       toast.success('تم إنشاء الامتحان بنجاح!');
       setExams([data.data, ...exams]);
       setShowModal(false);
