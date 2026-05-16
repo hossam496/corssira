@@ -21,7 +21,7 @@ export const subscribeToWebPush = async () => {
     return null;
   }
 
-  const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY || 'BOc1khzvd_ZD5uoAW3cxL_BPRq0AYu0Git8nNwV9ud4nCR13XwAxH7q0qxqoGLM6bCRpVAKCEMuP1X2wehU1jEA';
+  const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY || 'BBUDz8BODb4QJl-w_69LqP-lYtSlLsGZNREiV21MSK8SYBYekqePZ9BMQmfCFCqRA6FPJ2ptiMUWfQSX4D-YDIE';
 
   try {
     // 1. Wait for SW to be ready
