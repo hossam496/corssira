@@ -235,30 +235,55 @@ select.input {
   position: fixed; bottom: 16px; left: 16px; right: 16px;
   height: var(--bottom-nav-height);
   background: var(--bg-glass);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
   border: 1px solid var(--border);
   border-radius: var(--radius-2xl);
   display: none;
-  grid-template-columns: repeat(5, 1fr);
   z-index: 900;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  padding: 0 10px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  padding: 0 4px;
+  overflow: hidden;
+}
+
+.mobile-nav-container {
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  padding: 0 12px;
+}
+
+.mobile-nav-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 @media (max-width: 1024px) {
-  .mobile-nav { display: grid; }
+  .mobile-nav { display: block; }
 }
 
 .mobile-nav-item {
+  flex: 0 0 72px; /* Fixed width for items to allow scrolling */
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   color: var(--text-secondary); text-decoration: none; gap: 4px;
   transition: var(--transition-fast);
+  position: relative;
+  min-width: 72px;
 }
+
 .mobile-nav-item.active { color: var(--accent-blue); }
-.mobile-nav-item svg { width: 24px; height: 24px; transition: transform 0.2s; }
-.mobile-nav-item.active svg { transform: translateY(-4px) scale(1.1); }
-.mobile-nav-item span { font-size: 10px; font-weight: 700; }
+.mobile-nav-item svg { width: 22px; height: 22px; transition: transform 0.2s; opacity: 0.7; }
+.mobile-nav-item.active svg { transform: translateY(-4px) scale(1.1); opacity: 1; }
+.mobile-nav-item span { font-size: 10px; font-weight: 700; white-space: nowrap; }
+
+.mobile-nav-indicator {
+  position: absolute; bottom: 10px; width: 5px; height: 5px; 
+  border-radius: 50%; background: var(--accent-blue);
+  box-shadow: 0 0 10px var(--accent-blue);
+}
 
 /* Modals & Bottom Sheets */
 .modal-overlay {
