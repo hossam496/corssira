@@ -21,26 +21,21 @@ export const subscribeToWebPush = async () => {
     return null;
   }
 
+  // HARDCODED KEY to ensure it's not a build/env issue
+  const VAPID_PUBLIC_KEY = 'BOc1khzvd_ZD5uoAW3cxL_BPRq0AYu0Git8nNwV9ud4nCR13XwAxH7q0qxqoGLM6bCRpVAKCEMuP1X2wehU1jEA';
+
   try {
     const registration = await navigator.serviceWorker.ready;
-    
-    // Check for existing subscription
+    console.log('Service Worker is ready. State:', registration.active ? 'active' : 'waiting/installing');
+
     let subscription = await registration.pushManager.getSubscription();
 
-    const publicVapidKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;
-    if (!publicVapidKey) {
-      console.error('VAPID public key is missing from environment variables!');
-      return null;
-    }
+    const convertedKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
 
-    const convertedKey = urlBase64ToUint8Array(publicVapidKey.trim());
-
-    // If subscription exists, verify it (optional, but let's just use it)
     if (subscription) {
       console.log('Existing push subscription found.');
     } else {
-      console.log('No existing subscription. Subscribing now...');
-      
+      console.log('Subscribing to push service...');
       try {
         subscription = await registration.pushManager.subscribe({
           userVisibleOnly: true,
@@ -48,13 +43,13 @@ export const subscribeToWebPush = async () => {
         });
       } catch (subError) {
         if (subError.name === 'AbortError') {
-          console.warn('Push service aborted. Attempting to reset and retry...');
-          // Try to clean up any ghost subscription
-          const ghostSub = await registration.pushManager.getSubscription();
-          if (ghostSub) await ghostSub.unsubscribe();
+          console.warn('Push service aborted (AbortError). This is often a browser or network issue.');
+          console.warn('Trying one last reset...');
+          const existing = await registration.pushManager.getSubscription();
+          if (existing) await existing.unsubscribe();
           
-          // Retry once after a short delay
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          // Small delay before final attempt
+          await new Promise(r => setTimeout(r, 500));
           subscription = await registration.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: convertedKey
@@ -66,22 +61,13 @@ export const subscribeToWebPush = async () => {
     }
 
     if (subscription) {
-      // Send the subscription to the backend
       await api.post('/push/subscribe', subscription);
-      console.log('✅ Push subscription synchronized with backend');
+      console.log('✅ Push subscription active');
       return subscription;
     }
-    
     return null;
   } catch (error) {
-    console.error('Failed to subscribe to web push:', error);
-    console.error('Error Name:', error.name);
-    console.error('Error Message:', error.message);
-    
-    if (error.name === 'AbortError') {
-      console.info('Tip: This often happens due to network issues or using 127.0.0.1 instead of localhost.');
-    }
-    
+    console.error('Push Error:', error.name, '-', error.message);
     return null;
   }
 };

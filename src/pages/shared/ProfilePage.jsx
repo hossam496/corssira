@@ -428,18 +428,19 @@ const ProfilePage = () => {
 
                       <button 
                         onClick={async () => {
-                          try {
-                            const reg = await navigator.serviceWorker.ready;
-                            const sub = await reg.pushManager.getSubscription();
-                            if (sub) await sub.unsubscribe();
-                            toast.success('تم إلغاء الاشتراك. يمكنك الآن التفعيل مجدداً.');
-                          } catch (e) {
-                            toast.error('حدث خطأ أثناء إلغاء الاشتراك');
+                          if (window.confirm('سيتم حذف جميع بيانات المتصفح المتعلقة بالموقع وتسجيل خروجك. هل أنت متأكد؟')) {
+                            const registrations = await navigator.serviceWorker.getRegistrations();
+                            for (let registration of registrations) {
+                              await registration.unregister();
+                            }
+                            localStorage.clear();
+                            sessionStorage.clear();
+                            window.location.reload();
                           }
                         }}
-                        className="btn btn-ghost border border-border px-6 py-3 rounded-xl text-text-secondary"
+                        className="btn btn-ghost border border-accent-red/20 px-6 py-3 rounded-xl text-accent-red hover:bg-accent-red/5"
                       >
-                        <RefreshCw size={18} /> إعادة ضبط الاشتراك
+                        <Trash2 size={18} /> مسح شامل وإعادة تشغيل
                       </button>
                     </div>
                   </div>
@@ -449,10 +450,16 @@ const ProfilePage = () => {
                       <AlertCircle className="text-accent-amber shrink-0" size={20} />
                       <div>
                         <h4 className="font-bold text-text-primary mb-1 text-sm">ملاحظة لمستخدمي Windows / Chrome</h4>
-                        <p className="text-xs text-text-muted leading-relaxed">
-                          إذا استمر ظهور خطأ (AbortError)، يرجى التأكد من أنك تستخدم رابط <span className="text-accent-blue font-bold">localhost</span> وليس IP داخلي، 
-                          وأن إعدادات "توفير الطاقة" في المتصفح لا تمنع خدمات التنبيهات.
+                        <p className="text-xs text-text-muted leading-relaxed mb-3">
+                          إذا استمر ظهور خطأ (AbortError)، يرجى التأكد من أنك تستخدم رابط <span className="text-accent-blue font-bold">localhost</span> وليس IP داخلي.
                         </p>
+                        <div className="bg-bg-card p-3 rounded-xl border border-border text-[10px] space-y-1">
+                          <p className="font-bold text-accent-blue underline mb-1">خطوات حل المشكلة في Windows:</p>
+                          <p>1. افتح إعدادات Windows (Settings).</p>
+                          <p>2. اذهب إلى النظام (System) ثم التنبيهات (Notifications).</p>
+                          <p>3. تأكد أن التنبيهات "مفعلة" وأن المتصفح مسموح له بإرسال التنبيهات.</p>
+                          <p>4. تأكد من إيقاف وضع "عدم الإزعاج" (Focus Assist).</p>
+                        </div>
                       </div>
                     </div>
                   </div>
