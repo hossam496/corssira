@@ -95,16 +95,16 @@ const StudentGradesPage = () => {
            </h3>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-right">
+        <div className="overflow-x-auto overflow-y-hidden">
+          <table className="w-full text-right border-collapse responsive-table">
             <thead>
               <tr className="bg-white/[0.02] border-b border-border/50">
-                <th className="px-8 py-5 text-xs font-black text-text-muted uppercase tracking-widest">المادة</th>
-                <th className="px-8 py-5 text-xs font-black text-text-muted uppercase tracking-widest">الاختبار</th>
-                <th className="px-8 py-5 text-xs font-black text-text-muted uppercase tracking-widest text-center">الدرجة</th>
-                <th className="px-8 py-5 text-xs font-black text-text-muted uppercase tracking-widest text-center">النسبة</th>
-                <th className="px-8 py-5 text-xs font-black text-text-muted uppercase tracking-widest text-center">التقدير</th>
-                <th className="px-8 py-5 text-xs font-black text-text-muted uppercase tracking-widest text-left">التاريخ</th>
+                <th className="px-6 py-5 text-[10px] font-black text-text-muted uppercase tracking-widest">المادة</th>
+                <th className="px-6 py-5 text-[10px] font-black text-text-muted uppercase tracking-widest">الاختبار</th>
+                <th className="px-6 py-5 text-[10px] font-black text-text-muted uppercase tracking-widest text-center">الدرجة</th>
+                <th className="px-6 py-5 text-[10px] font-black text-text-muted uppercase tracking-widest text-center">النسبة</th>
+                <th className="px-6 py-5 text-[10px] font-black text-text-muted uppercase tracking-widest text-center">التقدير</th>
+                <th className="px-6 py-5 text-[10px] font-black text-text-muted uppercase tracking-widest text-left">التاريخ</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
@@ -119,28 +119,32 @@ const StudentGradesPage = () => {
                 grades.map((g, idx) => (
                   <motion.tr 
                     key={g._id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.05 }}
-                    className="hover:bg-white/[0.02] transition-colors group"
+                    className="hover:bg-white/[0.02] transition-colors group border-b border-white/5 last:border-0"
                   >
-                    <td className="px-8 py-6">
+                    <td className="px-6 py-6" data-label="المادة">
                       <div className="flex items-center gap-4">
                          <div className="w-10 h-10 rounded-xl bg-accent-blue/10 flex items-center justify-center text-lg shrink-0 group-hover:scale-110 transition-transform">📚</div>
-                         <div className="font-black text-text-primary text-base group-hover:text-accent-blue transition-colors">{g.subject?.name}</div>
+                         <div className="font-black text-text-primary text-base group-hover:text-accent-blue transition-colors truncate">{g.subject?.name}</div>
                       </div>
                     </td>
-                    <td className="px-8 py-6">
-                      <span className="text-[10px] font-black uppercase tracking-widest bg-accent-blue/5 text-accent-blue border border-accent-blue/10 px-3 py-1.5 rounded-lg">{g.examTitle}</span>
+                    <td className="px-6 py-6" data-label="الاختبار">
+                      <div className="flex flex-wrap gap-1">
+                        <span className="text-[10px] font-black uppercase tracking-widest bg-accent-blue/5 text-accent-blue border border-accent-blue/10 px-3 py-1.5 rounded-lg inline-block max-w-[150px] truncate">
+                          {g.examTitle}
+                        </span>
+                      </div>
                     </td>
-                    <td className="px-8 py-6 text-center">
-                      <div className="flex items-baseline justify-center gap-1">
+                    <td className="px-6 py-6 text-center" data-label="الدرجة">
+                      <div className="flex items-baseline justify-center gap-1" dir="ltr">
                         <span className="text-xl font-black text-text-primary leading-none">{g.score}</span>
-                        <span className="text-[10px] font-black text-text-muted uppercase">/{g.totalScore}</span>
+                        <span className="text-[10px] font-black text-text-muted uppercase">/ {g.totalScore}</span>
                       </div>
                     </td>
-                    <td className="px-8 py-6">
-                      <div className="flex flex-col items-center gap-2">
+                    <td className="px-6 py-6" data-label="النسبة">
+                      <div className="flex flex-col items-center md:items-center gap-2">
                         <span className="text-sm font-black text-text-primary">{Math.round((g.score / (g.totalScore || 1)) * 100)}%</span>
                         <div className="w-20 h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
                           <div 
@@ -150,8 +154,8 @@ const StudentGradesPage = () => {
                         </div>
                       </div>
                     </td>
-                    <td className="px-8 py-6 text-center">
-                       <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${
+                    <td className="px-6 py-6 text-center" data-label="التقدير">
+                       <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all inline-block min-w-[80px] ${
                          ['امتياز', 'جيد جداً', 'جيد', 'مقبول'].includes(g.status) 
                          ? 'bg-accent-green/10 text-accent-green border-accent-green/20' 
                          : 'bg-accent-red/10 text-accent-red border-accent-red/20'
@@ -159,9 +163,9 @@ const StudentGradesPage = () => {
                         {g.status}
                       </span>
                     </td>
-                    <td className="px-8 py-6 text-left">
+                    <td className="px-6 py-6 text-left" data-label="التاريخ">
                       <span className="text-[10px] font-black text-text-muted uppercase tracking-tighter flex items-center justify-end gap-1.5">
-                        <Calendar size={10} /> {new Date(g.createdAt).toLocaleDateString('ar-EG', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        <Calendar size={12} className="text-accent-blue/40" /> {new Date(g.createdAt).toLocaleDateString('ar-EG', { day: 'numeric', month: 'short' })}
                       </span>
                     </td>
                   </motion.tr>
