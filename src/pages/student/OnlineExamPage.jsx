@@ -168,7 +168,7 @@ const OnlineExamPage = () => {
 
   if (loading) return (
     <div className="min-h-screen bg-bg-primary flex flex-col items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-10" style={{ backgroundImage: 'url("https://grainy-gradients.vercel.app/noise.svg")' }} />
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-10" style={{ backgroundImage: 'url("/noise.svg")' }} />
         <Loader2 className="animate-spin text-accent-blue mb-8" size={64} />
         <div className="text-accent-blue font-black tracking-[0.3em] animate-pulse uppercase">System Initializing...</div>
     </div>
@@ -177,7 +177,7 @@ const OnlineExamPage = () => {
   if (statusError) {
     return (
       <div className="min-h-screen bg-bg-primary relative overflow-hidden flex flex-col items-center justify-center p-8 font-cairo">
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-10" style={{ backgroundImage: 'url("https://grainy-gradients.vercel.app/noise.svg")' }} />
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-10" style={{ backgroundImage: 'url("/noise.svg")' }} />
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
           className="bg-slate-900/40 backdrop-blur-3xl border border-white/10 rounded-[3rem] p-12 text-center max-w-lg w-full shadow-2xl relative z-20"
@@ -222,7 +222,7 @@ const OnlineExamPage = () => {
   if (!started) {
     return (
       <div className="min-h-screen bg-bg-primary relative overflow-hidden flex flex-col font-cairo">
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-10" style={{ backgroundImage: 'url("https://grainy-gradients.vercel.app/noise.svg")' }} />
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-10" style={{ backgroundImage: 'url("/noise.svg")' }} />
         <div className="absolute -top-[20%] -right-[10%] w-[60%] h-[60%] bg-accent-blue/10 blur-[180px] rounded-full z-0" />
         <div className="absolute -bottom-[20%] -left-[10%] w-[50%] h-[50%] bg-accent-purple/5 blur-[150px] rounded-full z-0" />
 
@@ -312,7 +312,7 @@ const OnlineExamPage = () => {
 
   return (
     <div className="min-h-screen bg-bg-primary relative overflow-hidden flex flex-col font-cairo text-right" dir="rtl">
-      <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-10" style={{ backgroundImage: 'url("https://grainy-gradients.vercel.app/noise.svg")' }} />
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-10" style={{ backgroundImage: 'url("/noise.svg")' }} />
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle,rgba(59,130,246,0.05)_0%,transparent_70%)] pointer-events-none z-0" />
 
       {/* Warning Overlay */}
