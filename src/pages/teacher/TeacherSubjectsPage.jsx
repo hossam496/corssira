@@ -53,8 +53,7 @@ const TeacherSubjectsPage = () => {
     }
   };
 
-  const handleSave = async (formData) => {
-    const data = Object.fromEntries(formData.entries());
+  const handleSave = async (data) => {
     try {
       if (isEdit) {
         await api.put(`/subjects/${selectedSubject._id}`, data);
