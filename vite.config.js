@@ -23,6 +23,7 @@ export default defineConfig({
         background_color: '#050915',
         display: 'standalone',
         start_url: '/',
+        gcm_sender_id: '103953800507',
         icons: [
           {
             src: 'logo.png',
