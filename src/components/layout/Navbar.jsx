@@ -136,9 +136,9 @@ const Navbar = ({ onMenuToggle, sidebarCollapsed }) => {
                     ) : (
                       notifications.map(n => (
                         <div 
-                          key={n._id} 
-                          onClick={() => markRead(n._id)} 
-                          className={`p-4 border-b border-white/5 cursor-pointer transition-colors ${n.isRead?.includes(user?._id) ? 'bg-transparent' : 'bg-accent-blue/5'}`}
+                          key={n.id} 
+                          onClick={() => markRead(n.id)} 
+                          className={`p-4 border-b border-white/5 cursor-pointer transition-colors ${n.read ? 'bg-transparent' : 'bg-accent-blue/5'}`}
                         >
                           <div className="text-sm font-black mb-1 text-text-primary">{n.title}</div>
                           <div className="text-xs text-text-secondary leading-relaxed">{n.message}</div>
