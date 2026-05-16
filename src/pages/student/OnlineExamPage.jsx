@@ -229,9 +229,9 @@ const OnlineExamPage = () => {
         <motion.div 
             initial={{ opacity: 0, scale: 0.98, y: 20 }} 
             animate={{ opacity: 1, scale: 1, y: 0 }} 
-            className="flex-1 flex items-center justify-center p-8 z-20 w-full"
+            className="flex-1 flex items-center justify-center p-4 md:p-8 z-20 w-full"
         >
-            <div className="bg-slate-900/40 backdrop-blur-[40px] border border-white/10 rounded-[3rem] p-12 shadow-2xl max-w-[1100px] w-full grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-16">
+            <div className="bg-slate-900/40 backdrop-blur-[40px] border border-white/10 rounded-[2rem] md:rounded-[3rem] p-6 md:p-12 shadow-2xl max-w-[1100px] w-full grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 md:gap-16">
                 <div>
                     <div className="flex items-center gap-4 mb-8">
                         <div className="px-4 py-2 bg-accent-blue/10 border border-accent-blue/20 rounded-full text-accent-blue text-xs font-black uppercase tracking-widest">
@@ -243,10 +243,10 @@ const OnlineExamPage = () => {
                         </div>
                     </div>
 
-                    <h1 className="text-5xl md:text-6xl font-black text-white leading-tight mb-6">
+                    <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-4 md:mb-6">
                         {exam.title}
                     </h1>
-                    <p className="text-text-secondary text-lg leading-relaxed mb-12 max-w-2xl">
+                    <p className="text-text-secondary text-base md:text-lg leading-relaxed mb-8 md:mb-12 max-w-2xl">
                         أهلاً بك في بيئة الاختبار الاحترافية. يرجى التأكد من استقرار اتصال الإنترنت والالتزام بقواعد النظام الصارمة لضمان صحة نتائجك.
                     </p>
 
@@ -266,9 +266,9 @@ const OnlineExamPage = () => {
                     </div>
                 </div>
 
-                <div className="relative group">
-                    <div className="absolute inset-0 bg-gradient-to-b from-accent-blue/20 to-transparent blur-[30px] opacity-0 group-hover:opacity-100 transition-opacity rounded-[2.5rem]" />
-                    <div className="relative bg-white/[0.03] border border-white/10 rounded-[2.5rem] p-10 backdrop-blur-md text-center flex flex-col items-center">
+                <div className="relative group mt-8 lg:mt-0">
+                    <div className="absolute inset-0 bg-gradient-to-b from-accent-blue/20 to-transparent blur-[30px] opacity-0 group-hover:opacity-100 transition-opacity rounded-[2rem] md:rounded-[2.5rem]" />
+                    <div className="relative bg-white/[0.03] border border-white/10 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 backdrop-blur-md text-center flex flex-col items-center">
                         <div className="w-20 h-20 bg-accent-blue/10 border border-accent-blue/20 rounded-3xl flex items-center justify-center text-accent-blue mb-8 shadow-xl shadow-accent-blue/10">
                             <ShieldCheck size={40} />
                         </div>
@@ -360,18 +360,24 @@ const OnlineExamPage = () => {
       </AnimatePresence>
 
       {/* Exam Header */}
-      <div className="h-24 border-b border-white/5 bg-slate-900/40 backdrop-blur-[30px] flex items-center justify-between px-12 relative z-50">
-        <div className="flex items-center gap-6">
-            <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-accent-blue shadow-inner">
+      <div className="h-20 md:h-24 border-b border-white/5 bg-slate-900/40 backdrop-blur-[30px] flex items-center justify-between px-4 md:px-12 relative z-50">
+        <div className="flex items-center gap-4 md:gap-6">
+            <div className="hidden md:flex w-14 h-14 rounded-2xl bg-white/5 border border-white/10 items-center justify-center text-accent-blue shadow-inner">
                 <ShieldCheck size={28} />
             </div>
             <div>
-                <div className="text-xl font-black text-white line-clamp-1">{exam.title}</div>
+                <div className="text-lg md:text-xl font-black text-white line-clamp-1">{exam.title}</div>
                 <div className="flex items-center gap-2 mt-1">
                     <div className="w-2 h-2 rounded-full bg-accent-green shadow-[0_0_10px_var(--accent-green)] animate-pulse" />
-                    <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Live Secure Mode</span>
+                    <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] hidden md:inline">Live Secure Mode</span>
                 </div>
             </div>
+        </div>
+
+        {/* Mobile Timer */}
+        <div className="xl:hidden flex items-center gap-2 text-xl font-black text-white bg-white/5 px-4 py-2 rounded-xl border border-white/10">
+           <Timer size={18} className={timeLeft < 300 ? 'text-accent-red animate-pulse' : 'text-accent-blue'} />
+           <span className={timeLeft < 300 ? 'text-accent-red animate-pulse' : ''}>{m}:{s}</span>
         </div>
 
         <div className="hidden lg:flex flex-1 max-w-md mx-12 flex-col gap-2">
@@ -390,15 +396,15 @@ const OnlineExamPage = () => {
 
         <button 
           onClick={() => { if (window.confirm('هل تريد تسليم الامتحان نهائياً؟')) submitExam(); }} 
-          className="bg-accent-green/10 hover:bg-accent-green border border-accent-green/20 text-accent-green hover:text-white px-8 py-3 rounded-2xl font-black transition-all flex items-center gap-3 shadow-xl hover:shadow-accent-green/20 text-sm"
+          className="bg-accent-green/10 hover:bg-accent-green border border-accent-green/20 text-accent-green hover:text-white px-4 md:px-8 py-2 md:py-3 rounded-xl md:rounded-2xl font-black transition-all flex items-center gap-2 md:gap-3 shadow-xl hover:shadow-accent-green/20 text-xs md:text-sm"
         >
-            <Send size={18} className="rotate-180" /> تسليم الامتحان
+            <Send size={16} className="rotate-180 md:w-[18px] md:h-[18px]" /> <span className="hidden md:inline">تسليم الامتحان</span>
         </button>
       </div>
 
       <div className="flex flex-1 overflow-hidden relative z-10">
         {/* Main Content */}
-        <div className="flex-1 overflow-y-auto p-12 flex flex-col items-center">
+        <div className="flex-1 overflow-y-auto p-4 md:p-12 flex flex-col items-center">
             <motion.div 
                 key={currentQuestionIdx}
                 initial={{ opacity: 0, x: 20 }}
@@ -406,11 +412,11 @@ const OnlineExamPage = () => {
                 exit={{ opacity: 0, x: -20 }}
                 className="max-w-[900px] w-full flex flex-col flex-1"
             >
-                <div className="flex items-center justify-between mb-10">
-                    <div className="flex items-center gap-4">
-                        <span className="text-6xl font-black text-white/10 italic leading-none">{(currentQuestionIdx + 1).toString().padStart(2, '0')}</span>
-                        <div className="w-[1px] h-8 bg-white/10" />
-                        <div className="px-4 py-1.5 bg-accent-blue/10 border border-accent-blue/20 rounded-lg text-accent-blue text-[10px] font-black uppercase tracking-widest">{currentQ.type}</div>
+                <div className="flex items-center justify-between mb-8 md:mb-10">
+                    <div className="flex items-center gap-3 md:gap-4">
+                        <span className="text-4xl md:text-6xl font-black text-white/10 italic leading-none">{(currentQuestionIdx + 1).toString().padStart(2, '0')}</span>
+                        <div className="w-[1px] h-6 md:h-8 bg-white/10" />
+                        <div className="px-3 md:px-4 py-1 md:py-1.5 bg-accent-blue/10 border border-accent-blue/20 rounded-lg text-accent-blue text-[10px] font-black uppercase tracking-widest">{currentQ.type}</div>
                     </div>
                     <div className="flex items-center gap-3 bg-white/5 px-5 py-2.5 rounded-2xl border border-white/10 shadow-xl">
                         <Award className="text-accent-yellow" size={20} />
@@ -418,8 +424,8 @@ const OnlineExamPage = () => {
                     </div>
                 </div>
 
-                <div className="bg-slate-900/30 backdrop-blur-[30px] border border-white/10 rounded-[3rem] p-16 shadow-2xl mb-8">
-                    <h2 className="text-3xl font-black text-white leading-relaxed mb-12">
+                <div className="bg-slate-900/30 backdrop-blur-[30px] border border-white/10 rounded-[2rem] md:rounded-[3rem] p-6 md:p-16 shadow-2xl mb-8">
+                    <h2 className="text-xl md:text-3xl font-black text-white leading-relaxed mb-8 md:mb-12">
                         {currentQ.question}
                     </h2>
 
@@ -427,13 +433,13 @@ const OnlineExamPage = () => {
                         {currentQ.type === 'اختيار من متعدد' && currentQ.options.map((opt, i) => (
                             <label 
                               key={i} 
-                              className={`flex items-center gap-6 p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300 group ${
+                              className={`flex items-center gap-4 md:gap-6 p-4 md:p-6 rounded-2xl border-2 cursor-pointer transition-all duration-300 group ${
                                 answers[currentQ._id] === opt 
                                 ? 'bg-accent-blue/10 border-accent-blue shadow-[0_0_40px_rgba(59,130,246,0.15)]' 
                                 : 'border-white/5 bg-white/[0.02] hover:border-white/20 hover:bg-white/[0.04]'
                               }`}
                             >
-                                <div className={`w-7 h-7 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
+                                <div className={`w-6 h-6 md:w-7 md:h-7 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
                                   answers[currentQ._id] === opt ? 'border-accent-blue bg-accent-blue scale-110 shadow-lg shadow-accent-blue/40' : 'border-white/10'
                                 }`}>
                                     {answers[currentQ._id] === opt && <div className="w-2.5 h-2.5 bg-white rounded-full" />}
@@ -446,16 +452,16 @@ const OnlineExamPage = () => {
                                     onChange={(e) => setAnswers({ ...answers, [currentQ._id]: e.target.value })}
                                     className="hidden"
                                 />
-                                <span className={`text-xl font-bold transition-colors ${answers[currentQ._id] === opt ? 'text-white' : 'text-text-secondary'}`}>{opt}</span>
+                                <span className={`text-base md:text-xl font-bold transition-colors ${answers[currentQ._id] === opt ? 'text-white' : 'text-text-secondary'}`}>{opt}</span>
                             </label>
                         ))}
 
                         {currentQ.type === 'صح وخطأ' && (
-                            <div className="grid grid-cols-2 gap-8">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                                 {['صح', 'خطأ'].map(opt => (
                                     <label 
                                       key={opt} 
-                                      className={`flex flex-col items-center justify-center gap-8 p-16 rounded-[2.5rem] border-2 cursor-pointer transition-all duration-500 ${
+                                      className={`flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 p-6 md:p-16 rounded-2xl md:rounded-[2.5rem] border-2 cursor-pointer transition-all duration-500 ${
                                         answers[currentQ._id] === opt 
                                         ? 'bg-accent-blue/10 border-accent-blue shadow-[0_0_40px_rgba(59,130,246,0.15)]' 
                                         : 'border-white/5 bg-white/[0.02] hover:border-white/20'
@@ -469,12 +475,12 @@ const OnlineExamPage = () => {
                                             onChange={(e) => setAnswers({ ...answers, [currentQ._id]: e.target.value })}
                                             className="hidden"
                                         />
-                                        <div className={`w-20 h-20 rounded-[1.5rem] border-2 flex items-center justify-center transition-all duration-500 ${
+                                        <div className={`w-12 h-12 md:w-20 md:h-20 rounded-xl md:rounded-[1.5rem] border-2 flex items-center justify-center transition-all duration-500 shrink-0 ${
                                           answers[currentQ._id] === opt ? 'bg-accent-blue border-accent-blue text-white rotate-[360deg] shadow-3xl shadow-accent-blue/40' : 'border-white/10'
                                         }`}>
-                                            {answers[currentQ._id] === opt ? <CheckCircle2 size={40} /> : <div className="text-3xl font-black">{opt[0]}</div>}
+                                            {answers[currentQ._id] === opt ? <CheckCircle2 className="w-6 h-6 md:w-10 md:h-10" /> : <div className="text-xl md:text-3xl font-black">{opt[0]}</div>}
                                         </div>
-                                        <span className={`text-4xl font-black transition-colors ${answers[currentQ._id] === opt ? 'text-white' : 'text-text-muted'}`}>{opt}</span>
+                                        <span className={`text-2xl md:text-4xl font-black transition-colors ${answers[currentQ._id] === opt ? 'text-white' : 'text-text-muted'}`}>{opt}</span>
                                     </label>
                                 ))}
                             </div>
@@ -485,7 +491,7 @@ const OnlineExamPage = () => {
                                 <textarea
                                     value={answers[currentQ._id] || ''}
                                     onChange={(e) => setAnswers({ ...answers, [currentQ._id]: e.target.value })}
-                                    className="w-full min-h-[400px] bg-white/[0.03] border-2 border-white/5 rounded-[2.5rem] p-10 text-xl leading-relaxed text-white focus:outline-none focus:bg-white/[0.06] focus:border-accent-blue/30 transition-all placeholder:text-white/10 font-medium"
+                                    className="w-full min-h-[200px] md:min-h-[400px] bg-white/[0.03] border-2 border-white/5 rounded-2xl md:rounded-[2.5rem] p-6 md:p-10 text-base md:text-xl leading-relaxed text-white focus:outline-none focus:bg-white/[0.06] focus:border-accent-blue/30 transition-all placeholder:text-white/10 font-medium"
                                     placeholder="ابدأ في كتابة إجابتك هنا بالتفصيل..."
                                 />
                                 <div className="absolute bottom-8 left-8 px-4 py-1.5 bg-white/5 border border-white/10 rounded-full text-[10px] font-black text-text-muted uppercase tracking-widest">
@@ -496,16 +502,16 @@ const OnlineExamPage = () => {
                     </div>
                 </div>
 
-                <div className="flex items-center justify-between mt-auto px-4">
+                <div className="flex items-center justify-between mt-auto px-2 md:px-4">
                     <button 
                         onClick={() => setCurrentQuestionIdx(i => Math.max(0, i - 1))}
                         disabled={currentQuestionIdx === 0}
-                        className="flex items-center gap-4 text-text-muted hover:text-white font-black text-xl transition-all disabled:opacity-0 disabled:pointer-events-none group"
+                        className="flex items-center gap-2 md:gap-4 text-text-muted hover:text-white font-black text-sm md:text-xl transition-all disabled:opacity-0 disabled:pointer-events-none group"
                     >
-                        <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center transition-all group-hover:bg-white group-hover:text-black">
-                            <ChevronRight size={24} />
+                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center transition-all group-hover:bg-white group-hover:text-black shrink-0">
+                            <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
                         </div>
-                        السابق
+                        <span className="hidden md:inline">السابق</span>
                     </button>
                     
                     <button 
@@ -516,17 +522,17 @@ const OnlineExamPage = () => {
                                 setCurrentQuestionIdx(i => i + 1);
                             }
                         }}
-                        className={`py-4 px-12 rounded-full font-black text-xl flex items-center gap-6 transition-all shadow-2xl active:scale-95 group ${
+                        className={`py-3 md:py-4 px-6 md:px-12 rounded-full font-black text-sm md:text-xl flex items-center gap-4 md:gap-6 transition-all shadow-2xl active:scale-95 group ${
                           currentQuestionIdx === exam.questions.length - 1 
                           ? 'bg-accent-green text-white shadow-accent-green/20 hover:bg-accent-blue hover:shadow-accent-blue/30' 
                           : 'bg-white text-slate-950 shadow-white/10 hover:scale-105'
                         }`}
                     >
                         {currentQuestionIdx === exam.questions.length - 1 ? 'إنهاء وتسليم' : 'السؤال التالي'}
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
+                        <div className={`w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl flex items-center justify-center transition-all shrink-0 ${
                           currentQuestionIdx === exam.questions.length - 1 ? 'bg-white/20' : 'bg-black/10'
                         }`}>
-                            {currentQuestionIdx === exam.questions.length - 1 ? <CheckCircle2 size={24} /> : <ChevronLeft size={24} />}
+                            {currentQuestionIdx === exam.questions.length - 1 ? <CheckCircle2 className="w-5 h-5 md:w-6 md:h-6" /> : <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />}
                         </div>
                     </button>
                 </div>
