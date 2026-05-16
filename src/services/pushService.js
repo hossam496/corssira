@@ -21,20 +21,17 @@ export const subscribeToWebPush = async () => {
     return null;
   }
 
-  // HARDCODED KEY to ensure it's not a build/env issue
-  const VAPID_PUBLIC_KEY = 'BOc1khzvd_ZD5uoAW3cxL_BPRq0AYu0Git8nNwV9ud4nCR13XwAxH7q0qxqoGLM6bCRpVAKCEMuP1X2wehU1jEA';
+  // Use Env key with hardcoded fallback
+  const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY || 'BOc1khzvd_ZD5uoAW3cxL_BPRq0AYu0Git8nNwV9ud4nCR13XwAxH7q0qxqoGLM6bCRpVAKCEMuP1X2wehU1jEA';
 
   try {
     const registration = await navigator.serviceWorker.ready;
     console.log('Service Worker is ready. State:', registration.active ? 'active' : 'waiting/installing');
 
     let subscription = await registration.pushManager.getSubscription();
-
     const convertedKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
 
-    if (subscription) {
-      console.log('Existing push subscription found.');
-    } else {
+    if (!subscription) {
       console.log('Subscribing to push service...');
       try {
         subscription = await registration.pushManager.subscribe({
@@ -43,13 +40,16 @@ export const subscribeToWebPush = async () => {
         });
       } catch (subError) {
         if (subError.name === 'AbortError') {
-          console.warn('Push service aborted (AbortError). This is often a browser or network issue.');
-          console.warn('Trying one last reset...');
+          console.error('❌ Push Service Error (AbortError):', subError.message);
+          console.warn('This usually happens when the browser cannot connect to Google/Mozilla push servers.');
+          console.warn('Check if you are behind a VPN, Firewall, or if Windows Notifications are disabled.');
+          
+          // Attempt recovery: Clear existing and try once more
           const existing = await registration.pushManager.getSubscription();
           if (existing) await existing.unsubscribe();
           
-          // Small delay before final attempt
-          await new Promise(r => setTimeout(r, 500));
+          await new Promise(r => setTimeout(r, 1000));
+          
           subscription = await registration.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: convertedKey
@@ -68,6 +68,9 @@ export const subscribeToWebPush = async () => {
     return null;
   } catch (error) {
     console.error('Push Error:', error.name, '-', error.message);
+    if (error.name === 'AbortError') {
+      console.error('💡 TIP: If you are on Windows, make sure "Focus Assist" is OFF and browser notifications are ON in System Settings.');
+    }
     return null;
   }
 };
