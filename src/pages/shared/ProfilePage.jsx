@@ -112,17 +112,32 @@ const ProfilePage = () => {
   const handleProfileSave = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await api.put(`/${user.role}s/me`, profile);
+      // Admin doesn't have a separate profile model, use auth/profile
+      const endpoint = user.role === 'admin' ? '/auth/profile' : `/${user.role}s/me`;
+      const { data } = await api.put(endpoint, profile);
+      
       // Update global auth state so navbar/sidebar reflect changes
-      if (data.data?.user) {
-        updateUser(data.data.user);
+      // Ensure role is preserved as it's critical for routing
+      let updatedUserData = null;
+      
+      if (data.user) {
+        updatedUserData = data.user;
+      } else if (data.data?.user) {
+        updatedUserData = data.data.user;
       } else if (data.data) {
-        // Fallback: if backend returns updated role object but not user nested
-        updateUser({ ...user, ...data.data.user }); 
+        updatedUserData = { ...user, ...data.data };
       }
+
+      if (updatedUserData) {
+        // Force preserve role if it's missing from response
+        if (!updatedUserData.role) updatedUserData.role = user.role;
+        updateUser(updatedUserData);
+      }
+      
       toast.success('تم تحديث الملف الشخصي بنجاح ✅');
     } catch (error) {
-      toast.error('فشل التحديث');
+      console.error("Update Error:", error);
+      toast.error(error.response?.data?.message || 'فشل التحديث');
     }
   };
 
