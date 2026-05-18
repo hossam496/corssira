@@ -25,11 +25,13 @@ import SplashScreen from './components/SplashScreen';
 import DashboardLayout from './components/layout/DashboardLayout';
 import TeacherGroupsPage from './pages/teacher/TeacherGroupsPage';
 import TeacherAssignmentsPage from './pages/teacher/TeacherAssignmentsPage';
+import TeacherMaterialsPage from './pages/teacher/TeacherMaterialsPage';
 import StudentGroupsPage from './pages/student/StudentGroupsPage';
 import TeacherExamsPage from './pages/teacher/TeacherExamsPage';
 import OnlineExamPage from './pages/student/OnlineExamPage';
 import StudentExamsPage from './pages/student/StudentExamsPage';
 import StudentAssignmentsPage from './pages/student/StudentAssignmentsPage';
+import StudentMaterialsPage from './pages/student/StudentMaterialsPage';
 
 // Protected Route
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -96,6 +98,7 @@ function App() {
           <Route path="grades" element={<TeacherGradesPage />} />
           <Route path="exams" element={<TeacherExamsPage />} />
           <Route path="assignments" element={<TeacherAssignmentsPage />} />
+          <Route path="materials" element={<TeacherMaterialsPage />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
 
@@ -108,6 +111,7 @@ function App() {
           <Route path="attendance" element={<StudentAttendancePage />} />
           <Route path="exams" element={<StudentExamsPage />} />
           <Route path="assignments" element={<StudentAssignmentsPage />} />
+          <Route path="materials" element={<StudentMaterialsPage />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
         
