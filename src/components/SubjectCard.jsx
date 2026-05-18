@@ -10,21 +10,8 @@ const SubjectCard = ({ subject, teacher, isTeacherView = false, onDelete, onEdit
       exit={{ opacity: 0, scale: 0.95 }}
       whileHover={{ y: -8 }}
       className="bg-bg-card/60 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-8 relative overflow-hidden group shadow-2xl transition-all duration-500"
-      style={{ boxShadow: `0 20px 40px -15px ${subject.color || '#3b82f6'}20` }}
     >
-      {/* Dynamic Background Glow */}
-      <div 
-        className="absolute -top-10 -left-10 w-32 h-32 rounded-full blur-[80px] opacity-20 pointer-events-none transition-all duration-700 group-hover:scale-150 group-hover:opacity-30"
-        style={{ backgroundColor: subject.color || '#3b82f6' }}
-      />
-
-      <div className="flex justify-between items-start mb-6">
-        <div 
-          className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl transition-transform duration-500 group-hover:scale-110 border border-white/5"
-          style={{ backgroundColor: `${subject.color || '#3b82f6'}15` }}
-        >
-          {subject.icon || '📖'}
-        </div>
+      <div className="flex justify-end items-start mb-6">
         <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${
           subject.status === 'نشط' 
           ? 'bg-accent-green/10 text-accent-green border-accent-green/20' 

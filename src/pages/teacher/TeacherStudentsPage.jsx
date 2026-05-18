@@ -3,12 +3,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, GraduationCap, Phone, Mail, User, BookOpen, Filter, MoreVertical, Hash, MapPin, Calendar, CheckCircle, ArrowLeftRight, MessageCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../api/axios';
+import StudentDetailsModal from '../../components/StudentDetailsModal';
 
 const TeacherStudentsPage = () => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedGrade, setSelectedGrade] = useState('الكل');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedStudentId, setSelectedStudentId] = useState(null);
 
   const fetchStudents = async () => {
     setLoading(true);
@@ -97,7 +100,7 @@ const TeacherStudentsPage = () => {
                 className="bg-bg-card border border-border rounded-[2rem] p-6 flex flex-col md:flex-row items-center justify-between gap-6 hover:border-accent-blue/50 transition-all group group shadow-lg"
               >
                 <div className="flex items-center gap-6 flex-1">
-                  <div className="relative shrink-0">
+                  <div className="relative shrink-0 cursor-pointer" onClick={() => { setSelectedStudentId(student._id); setIsModalOpen(true); }}>
                     <div className="w-20 h-20 rounded-full border-4 border-white/5 overflow-hidden group-hover:border-accent-blue/20 transition-all">
                       <img 
                         src={student.user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${student.user?.name}`} 
@@ -110,7 +113,7 @@ const TeacherStudentsPage = () => {
                     </div>
                   </div>
                   
-                  <div className="text-right md:text-right">
+                  <div className="text-right md:text-right cursor-pointer" onClick={() => { setSelectedStudentId(student._id); setIsModalOpen(true); }}>
                     <h3 className="text-xl font-black text-text-primary mb-2 group-hover:text-accent-blue transition-colors">
                       {student.user?.name}
                     </h3>
@@ -141,6 +144,12 @@ const TeacherStudentsPage = () => {
           )}
         </AnimatePresence>
       </div>
+
+      <StudentDetailsModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        studentId={selectedStudentId} 
+      />
     </div>
   );
 };

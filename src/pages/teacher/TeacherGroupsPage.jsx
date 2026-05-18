@@ -22,6 +22,8 @@ const TeacherGroupsPage = () => {
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editingGroupId, setEditingGroupId] = useState(null);
   const [formData, setFormData] = useState({
     name: '', subject: '', schoolGrade: 'أولى ثانوي', 
     days: [], startTime: '', endTime: '', maxStudents: 20, location: 'Online'
@@ -61,14 +63,37 @@ const TeacherGroupsPage = () => {
     e.preventDefault();
     if (formData.days.length === 0) return toast.error('يرجى اختيار يوم واحد على الأقل');
     try {
-      await api.post('/groups', formData);
-      toast.success('تم إنشاء المجموعة بنجاح');
+      if (isEditMode) {
+        await api.put(`/groups/${editingGroupId}`, formData);
+        toast.success('تم تحديث المجموعة بنجاح');
+      } else {
+        await api.post('/groups', formData);
+        toast.success('تم إنشاء المجموعة بنجاح');
+      }
       fetchGroups();
       setIsModalOpen(false);
+      setIsEditMode(false);
+      setEditingGroupId(null);
       setFormData({ name: '', subject: '', schoolGrade: 'أولى ثانوي', days: [], startTime: '', endTime: '', maxStudents: 20, location: 'Online' });
     } catch (err) {
       toast.error(err.response?.data?.message || 'حدث خطأ');
     }
+  };
+
+  const handleEdit = (group) => {
+    setIsEditMode(true);
+    setEditingGroupId(group._id);
+    setFormData({
+      name: group.name,
+      subject: group.subject._id || group.subject,
+      schoolGrade: group.schoolGrade,
+      days: group.days,
+      startTime: group.startTime,
+      endTime: group.endTime,
+      maxStudents: group.maxStudents,
+      location: group.location
+    });
+    setIsModalOpen(true);
   };
 
   const handleDelete = async (id) => {
@@ -123,7 +148,12 @@ const TeacherGroupsPage = () => {
           whileHover={{ scale: 1.02 }} 
           whileTap={{ scale: 0.98 }} 
           className="btn btn-primary px-8 py-4 rounded-2xl shadow-blue flex items-center gap-2 text-lg font-black" 
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            setIsEditMode(false);
+            setEditingGroupId(null);
+            setFormData({ name: '', subject: '', schoolGrade: 'أولى ثانوي', days: [], startTime: '', endTime: '', maxStudents: 20, location: 'Online' });
+            setIsModalOpen(true);
+          }}
         >
           <Plus size={24} strokeWidth={3} />
           إنشاء مجموعة جديدة
@@ -161,9 +191,14 @@ const TeacherGroupsPage = () => {
                       </div>
                     </div>
                   </div>
-                  <button onClick={() => handleDelete(group._id)} className="w-10 h-10 rounded-xl bg-accent-red/5 text-accent-red hover:bg-accent-red hover:text-white transition-all flex items-center justify-center border border-accent-red/10">
-                    <Trash2 size={18} />
-                  </button>
+                  <div className="flex gap-2">
+                    <button onClick={() => handleEdit(group)} className="w-10 h-10 rounded-xl bg-accent-blue/5 text-accent-blue hover:bg-accent-blue hover:text-white transition-all flex items-center justify-center border border-accent-blue/10">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    </button>
+                    <button onClick={() => handleDelete(group._id)} className="w-10 h-10 rounded-xl bg-accent-red/5 text-accent-red hover:bg-accent-red hover:text-white transition-all flex items-center justify-center border border-accent-red/10">
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
                 </div>
 
                 <div className="space-y-4 mb-8">
@@ -274,8 +309,8 @@ const TeacherGroupsPage = () => {
             >
               <div className="p-10 bg-gradient-to-br from-accent-blue/10 to-transparent border-b border-border flex justify-between items-center">
                 <div>
-                  <h2 className="text-2xl font-black text-text-primary mb-1">إنشاء مجموعة جديدة</h2>
-                  <p className="text-sm text-text-secondary font-medium">أدخل بيانات المجموعة لجدولة الحصص بكفاءة</p>
+                  <h2 className="text-2xl font-black text-text-primary mb-1">{isEditMode ? 'تعديل المجموعة' : 'إنشاء مجموعة جديدة'}</h2>
+                  <p className="text-sm text-text-secondary font-medium">{isEditMode ? 'قم بتعديل بيانات المجموعة وتحديث مواعيدها' : 'أدخل بيانات المجموعة لجدولة الحصص بكفاءة'}</p>
                 </div>
                 <button onClick={() => setIsModalOpen(false)} className="w-12 h-12 rounded-2xl bg-white/5 border border-border text-text-muted hover:text-white transition-all flex items-center justify-center">
                   <X size={24} />
@@ -364,8 +399,8 @@ const TeacherGroupsPage = () => {
                 <div className="pt-10 border-t border-border flex justify-end gap-4">
                   <button type="button" onClick={() => setIsModalOpen(false)} className="px-8 py-4 rounded-2xl font-black text-text-muted hover:text-white transition-all">إلغاء</button>
                   <button type="submit" className="bg-accent-blue hover:bg-accent-blue-light text-white px-10 py-4 rounded-2xl font-black shadow-xl shadow-accent-blue/20 transition-all flex items-center gap-2">
-                    <Plus size={20} strokeWidth={3} />
-                    <span>حفظ ونشر المجموعة</span>
+                    {isEditMode ? null : <Plus size={20} strokeWidth={3} />}
+                    <span>{isEditMode ? 'حفظ التعديلات' : 'حفظ ونشر المجموعة'}</span>
                   </button>
                 </div>
               </form>

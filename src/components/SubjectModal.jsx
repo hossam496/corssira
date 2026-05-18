@@ -112,36 +112,7 @@ const SubjectModal = ({ isOpen, onClose, onSave, subject, isEdit }) => {
                 </div>
               </div>
 
-              {/* Icon + Color */}
-              <div className="grid grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-xs font-black text-text-secondary mr-1 flex items-center gap-2 uppercase tracking-widest">
-                    🚀 الأيقونة (Emoji)
-                  </label>
-                  <input
-                    name="icon"
-                    value={form.icon}
-                    onChange={handleChange}
-                    className="input bg-bg-secondary h-14 rounded-2xl border-white/5 focus:border-accent-blue/30 text-center text-xl"
-                    placeholder="مثال: 📐"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-xs font-black text-text-secondary mr-1 flex items-center gap-2 uppercase tracking-widest">
-                    🎨 لون المادة
-                  </label>
-                  <div className="flex items-center gap-3 h-14 bg-bg-secondary px-4 rounded-2xl border border-white/5">
-                    <input
-                      name="color"
-                      type="color"
-                      value={form.color}
-                      onChange={handleChange}
-                      className="w-10 h-8 bg-transparent cursor-pointer rounded overflow-hidden"
-                    />
-                    <span className="text-[10px] font-black text-text-muted uppercase tracking-tighter">اختر لوناً مميزاً</span>
-                  </div>
-                </div>
-              </div>
+
 
               {/* Description */}
               <div className="space-y-2">

@@ -85,6 +85,18 @@ const TeacherGradesPage = () => {
     }
   };
 
+  const averageGrade = grades.length > 0 
+    ? (grades.reduce((acc, curr) => acc + (curr.score / curr.totalScore), 0) / grades.length) * 100 
+    : 0;
+
+  const successCount = grades.filter(g => (g.score / g.totalScore) >= 0.5).length;
+  const successRate = grades.length > 0 ? (successCount / grades.length) * 100 : 0;
+
+  const highestGrade = grades.length > 0 
+    ? grades.reduce((max, curr) => (curr.score / curr.totalScore) > (max.score / max.totalScore) ? curr : max) 
+    : { score: 0, totalScore: 0 };
+
+
   return (
     <div className="page-container max-w-[1400px]">
       <motion.div 
@@ -107,10 +119,10 @@ const TeacherGradesPage = () => {
       {/* Stats Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
          {[
-           { label: 'متوسط الدرجات', value: '88.5%', icon: <Award />, color: 'text-accent-blue', bg: 'bg-accent-blue/10' },
+           { label: 'متوسط الدرجات', value: `${averageGrade.toFixed(1)}%`, icon: <Award />, color: 'text-accent-blue', bg: 'bg-accent-blue/10' },
            { label: 'إجمالي الاختبارات', value: grades.length, icon: <ClipboardList />, color: 'text-accent-purple', bg: 'bg-accent-purple/10' },
-           { label: 'نسبة النجاح', value: '94%', icon: <CheckCircle />, color: 'text-accent-green', bg: 'bg-accent-green/10' },
-           { label: 'أعلى درجة', value: '100/100', icon: <Star />, color: 'text-accent-yellow', bg: 'bg-accent-yellow/10' },
+           { label: 'نسبة النجاح', value: `${successRate.toFixed(1)}%`, icon: <CheckCircle />, color: 'text-accent-green', bg: 'bg-accent-green/10' },
+           { label: 'أعلى درجة', value: highestGrade.totalScore > 0 ? `${highestGrade.score}/${highestGrade.totalScore}` : '0/0', icon: <Star />, color: 'text-accent-yellow', bg: 'bg-accent-yellow/10' },
          ].map((stat, i) => (
            <motion.div 
              key={i} 
