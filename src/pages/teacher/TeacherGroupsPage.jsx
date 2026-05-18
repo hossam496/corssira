@@ -185,7 +185,7 @@ const TeacherGroupsPage = () => {
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-2xl bg-accent-blue/10 flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform">📚</div>
                     <div>
-                      <h3 className="text-xl font-black text-text-primary mb-1 group-hover:text-accent-blue transition-colors line-clamp-1">{group.name}</h3>
+                      <h3 className="text-xl font-black text-text-primary mb-1 group-hover:text-accent-blue transition-colors">{group.name}</h3>
                       <div className="flex items-center gap-2">
                          <span className="px-3 py-1 rounded-full bg-accent-indigo/10 text-accent-indigo text-[10px] font-black uppercase tracking-wider border border-accent-indigo/20">{group.schoolGrade}</span>
                       </div>
