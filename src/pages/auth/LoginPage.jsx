@@ -43,7 +43,7 @@ const LoginPage = () => {
             {/* Logo */}
             <div style={{ textAlign: 'center', marginBottom: 32 }}>
               <motion.div animate={{ y: [0, -6, 0] }} transition={{ duration: 3, repeat: Infinity }} style={{ width: 80, height: 80, borderRadius: 20, background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', boxShadow: '0 0 40px rgba(59,130,246,0.3)', overflow: 'hidden', padding: 8 }}>
-                <img src="/logo.png" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                <img src="/Gemini_Generated_Image_qx8udjqx8udjqx8u.png" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
               </motion.div>
               <h2 style={{ fontSize: 26, fontWeight: 800, color: '#f0f4ff', fontFamily: 'Cairo, sans-serif', marginBottom: 6 }}>تسجيل الدخول</h2>
               <p style={{ color: '#64748b', fontSize: 14, fontFamily: 'Cairo, sans-serif' }}>ادخل إلى حسابك في منصة كورسيرا</p>

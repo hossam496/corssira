@@ -69,7 +69,7 @@ const Sidebar = ({ role, collapsed, onToggle }) => {
               className="flex items-center gap-3"
             >
               <div className="w-10 h-10 rounded-xl overflow-hidden shadow-[0_0_20px_rgba(59,130,246,0.3)] shrink-0 bg-white">
-                <img src="/logo.png" alt="Corssira Logo" className="w-full h-full object-contain" />
+                <img src="/Gemini_Generated_Image_qx8udjqx8udjqx8u.png" alt="Corssira Logo" className="w-full h-full object-contain" />
               </div>
               <div>
                 <div className="font-black text-lg text-text-primary font-cairo leading-tight">كورسيرا</div>
@@ -81,7 +81,7 @@ const Sidebar = ({ role, collapsed, onToggle }) => {
         
         {collapsed && (
           <div className="w-9 h-9 rounded-lg overflow-hidden mx-auto shadow-md bg-white">
-            <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+            <img src="/Gemini_Generated_Image_qx8udjqx8udjqx8u.png" alt="Logo" className="w-full h-full object-contain" />
           </div>
         )}
 
