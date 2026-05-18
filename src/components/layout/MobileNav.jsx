@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { 
   LayoutDashboard, BookOpen, FileText, Bell, 
   Settings, Calendar, Award, GraduationCap, UsersRound, 
-  ClipboardList, BookMarked, Users
+  ClipboardList, BookMarked, Users, FolderUp
 } from 'lucide-react';
 
 const studentItems = [
@@ -14,6 +14,7 @@ const studentItems = [
   { icon: Calendar, label: 'حضوري', to: '/student/attendance' },
   { icon: FileText, label: 'الامتحانات', to: '/student/exams' },
   { icon: BookOpen, label: 'الواجبات', to: '/student/assignments' },
+  { icon: FolderUp, label: 'الملفات', to: '/student/materials' },
   { icon: Settings, label: 'ملفي', to: '/student/profile' },
 ];
 
@@ -26,6 +27,7 @@ const teacherItems = [
   { icon: Award, label: 'الدرجات', to: '/teacher/grades' },
   { icon: FileText, label: 'الامتحانات', to: '/teacher/exams' },
   { icon: BookOpen, label: 'الواجبات', to: '/teacher/assignments' },
+  { icon: FolderUp, label: 'الملفات', to: '/teacher/materials' },
   { icon: Settings, label: 'ملفي', to: '/teacher/profile' },
 ];
 
