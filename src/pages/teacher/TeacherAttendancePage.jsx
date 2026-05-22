@@ -7,63 +7,61 @@ import { useAuth } from '../../context/AuthContext';
 
 const TeacherAttendancePage = () => {
   const { user } = useAuth();
-  const [students, setStudents] = useState([]);
-  const [subjects, setSubjects] = useState([]);
-  const [selectedSubject, setSelectedSubject] = useState('');
+  const [groups, setGroups] = useState([]);
+  const [selectedGroupId, setSelectedGroupId] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [attendance, setAttendance] = useState({}); // { studentId: status }
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [search, setSearch] = useState('');
 
-  // Fetch Teacher's Subjects
+  // Fetch Teacher's Groups
   useEffect(() => {
-    const fetchSubjects = async () => {
+    const fetchGroups = async () => {
       try {
         setLoading(true);
-        const { data } = await api.get(`/subjects?teacher=${user?._id}`);
-        setSubjects(data.data);
-        if (data.data.length > 0) setSelectedSubject(data.data[0]._id);
+        const { data } = await api.get(`/groups/teacher`);
+        setGroups(data.data);
+        if (data.data.length > 0) setSelectedGroupId(data.data[0]._id);
       } catch (err) {
-        toast.error('فشل في جلب المواد');
+        toast.error('فشل في جلب المجموعات');
       } finally {
         setLoading(false);
       }
     };
-    if (user) fetchSubjects();
+    if (user) fetchGroups();
   }, [user]);
 
-  // Fetch Students for selected subject
+  const selectedGroup = groups.find(g => g._id === selectedGroupId);
+  const students = selectedGroup?.enrolledStudents || [];
+
+  // Fetch Attendance for selected group & date
   useEffect(() => {
-    const fetchStudents = async () => {
-      if (!selectedSubject) return;
+    const fetchAttendance = async () => {
+      if (!selectedGroupId) return;
       try {
         setLoading(true);
-        const { data } = await api.get(`/subjects/${selectedSubject}`);
-        setStudents(data.data.students || []);
-        
-        // Fetch existing attendance for this date
-        const attRes = await api.get(`/attendance?subject=${selectedSubject}&date=${date}`);
+        const attRes = await api.get(`/attendance?group=${selectedGroupId}&date=${date}`);
         const existingAtt = {};
         attRes.data.data.forEach(rec => {
           existingAtt[rec.student._id] = rec.status;
         });
         setAttendance(existingAtt);
       } catch (err) {
-        toast.error('فشل في جلب الطلاب');
+        toast.error('فشل في جلب سجلات الحضور');
       } finally {
         setLoading(false);
       }
     };
-    fetchStudents();
-  }, [selectedSubject, date]);
+    fetchAttendance();
+  }, [selectedGroupId, date]);
 
   const handleStatusChange = (stuId, status) => {
     setAttendance(prev => ({ ...prev, [stuId]: status }));
   };
 
   const handleSave = async () => {
-    if (!selectedSubject) return toast.error('يرجى اختيار المادة');
+    if (!selectedGroupId) return toast.error('يرجى اختيار المجموعة');
     setSaving(true);
     try {
       const records = students.map(s => ({
@@ -74,7 +72,8 @@ const TeacherAttendancePage = () => {
       
       await api.post('/attendance', { 
         records, 
-        subject: selectedSubject, 
+        subject: selectedGroup.subject._id,
+        group: selectedGroupId,
         date 
       });
       toast.success('تم حفظ سجل الحضور بنجاح ✅');
@@ -101,17 +100,17 @@ const TeacherAttendancePage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10 bg-bg-card border border-border p-6 rounded-3xl shadow-xl">
         <div className="space-y-2">
           <label className="text-xs font-black text-text-secondary mr-1 flex items-center gap-2">
-            <Filter size={14} className="text-accent-blue" /> المادة الدراسية
+            <Filter size={14} className="text-accent-blue" /> المجموعة
           </label>
           <div className="relative">
             <select 
-              value={selectedSubject} 
-              onChange={e => setSelectedSubject(e.target.value)} 
+              value={selectedGroupId} 
+              onChange={e => setSelectedGroupId(e.target.value)} 
               className="input bg-bg-secondary h-12 pr-10"
             >
-              {subjects.length > 0 ? subjects.map(s => (
-                <option key={s._id} value={s._id}>{s.name} - {s.category}</option>
-              )) : <option value="">لا يوجد مواد مسجلة</option>}
+              {groups.length > 0 ? groups.map(g => (
+                <option key={g._id} value={g._id}>{g.name} - {g.subject?.name}</option>
+              )) : <option value="">لا يوجد مجموعات مسجلة</option>}
             </select>
             <ChevronDown size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
           </div>
@@ -135,7 +134,7 @@ const TeacherAttendancePage = () => {
         <div className="flex items-end">
           <button 
             onClick={handleSave} 
-            disabled={saving || subjects.length === 0} 
+            disabled={saving || groups.length === 0} 
             className="w-full h-12 btn btn-primary rounded-2xl flex items-center justify-center gap-2 text-sm font-black shadow-lg shadow-accent-blue/20"
           >
             {saving ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
@@ -243,7 +242,7 @@ const TeacherAttendancePage = () => {
                 <tr>
                   <td colSpan={3} className="px-8 py-24 text-center">
                     <div className="text-6xl mb-6 opacity-20">👥</div>
-                    <p className="text-text-secondary font-black text-lg">لا يوجد طلاب مسجلين في هذه المادة حالياً</p>
+                    <p className="text-text-secondary font-black text-lg">لا يوجد طلاب مسجلين في هذه المجموعة حالياً</p>
                   </td>
                 </tr>
               )}
