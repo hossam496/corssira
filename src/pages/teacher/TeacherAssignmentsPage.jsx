@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, X, Loader2, Save, FileText, Calendar, Settings, Info, ExternalLink, Award, GraduationCap, BookOpen, User, Activity, CheckCircle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import api from '../../api/axios';
 
 const TeacherAssignmentsPage = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [assignments, setAssignments] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [groups, setGroups] = useState([]);
@@ -75,6 +77,10 @@ const TeacherAssignmentsPage = () => {
       setAssignments([data.data, ...assignments]);
       setShowModal(false);
       setForm({ title: '', description: '', subject: '', group: '', schoolGrade: '', deadline: '', totalMarks: 0, status: 'منشور' });
+      // ← Redirect to group if one was selected
+      if (form.group) {
+        navigate(`/teacher/groups?groupId=${form.group}`);
+      }
     } catch (err) {
       toast.error(err.response?.data?.message || 'خطأ في الحفظ');
     } finally {

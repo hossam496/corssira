@@ -25,6 +25,7 @@ import SplashScreen from './components/SplashScreen';
 import DashboardLayout from './components/layout/DashboardLayout';
 import TeacherGroupsPage from './pages/teacher/TeacherGroupsPage';
 import TeacherAssignmentsPage from './pages/teacher/TeacherAssignmentsPage';
+import GroupFilesPage from './pages/teacher/GroupFilesPage';
 import StudentGroupsPage from './pages/student/StudentGroupsPage';
 import TeacherExamsPage from './pages/teacher/TeacherExamsPage';
 import OnlineExamPage from './pages/student/OnlineExamPage';
@@ -92,6 +93,7 @@ function App() {
           <Route path="students" element={<TeacherStudentsPage />} />
           <Route path="subjects" element={<TeacherSubjectsPage />} />
           <Route path="groups" element={<TeacherGroupsPage />} />
+          <Route path="groups/:groupId/files" element={<GroupFilesPage />} />
           <Route path="attendance" element={<TeacherAttendancePage />} />
           <Route path="grades" element={<TeacherGradesPage />} />
           <Route path="exams" element={<TeacherExamsPage />} />

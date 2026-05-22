@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
-import { UsersRound, Plus, MapPin, Clock, CalendarDays, Trash2, X, BookOpen, GraduationCap, Users, Loader2, UserMinus, ChevronDown, ChevronUp } from 'lucide-react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { UsersRound, Plus, MapPin, Clock, CalendarDays, Trash2, X, BookOpen, GraduationCap, Users, Loader2, UserMinus, ChevronDown, ChevronUp, FolderOpen } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../api/axios';
 
@@ -18,6 +19,11 @@ const formatTime12h = (time24) => {
 
 const TeacherGroupsPage = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const highlightedGroupId = searchParams.get('groupId');
+  const highlightRef = useRef(null);
+
   const [groups, setGroups] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -49,6 +55,16 @@ const TeacherGroupsPage = () => {
     fetchGroups();
     fetchSubjects();
   }, []);
+
+  // Auto-expand & scroll to highlighted group (from assignment redirect)
+  useEffect(() => {
+    if (highlightedGroupId && groups.length > 0) {
+      setExpandedGroup(highlightedGroupId);
+      setTimeout(() => {
+        highlightRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 400);
+    }
+  }, [highlightedGroupId, groups]);
 
   const handleDayToggle = (day) => {
     setFormData(prev => ({
@@ -144,11 +160,16 @@ const TeacherGroupsPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {groups.map((group, index) => (
             <motion.div 
-              key={group._id} 
+              key={group._id}
+              ref={group._id === highlightedGroupId ? highlightRef : null}
               initial={{ opacity: 0, y: 20 }} 
               animate={{ opacity: 1, y: 0 }} 
               transition={{ delay: index * 0.1 }}
-              className="bg-bg-card border border-border rounded-[2rem] overflow-hidden group hover:border-accent-blue/50 transition-all duration-300 shadow-xl flex flex-col h-full"
+              className={`bg-bg-card border rounded-[2rem] overflow-hidden group hover:border-accent-blue/50 transition-all duration-300 shadow-xl flex flex-col h-full ${
+                group._id === highlightedGroupId
+                  ? 'border-accent-blue shadow-accent-blue/20 shadow-2xl ring-2 ring-accent-blue/30'
+                  : 'border-border'
+              }`}
             >
               <div className="p-8 flex-1">
                 <div className="flex justify-between items-start mb-6">
@@ -199,21 +220,35 @@ const TeacherGroupsPage = () => {
                 </div>
               </div>
 
-              {/* Footer: status + expand students */}
-              <div className="px-8 py-4 bg-white/[0.02] border-t border-border/50 flex justify-between items-center">
+              {/* Footer: status + actions */}
+              <div className="px-5 py-4 bg-white/[0.02] border-t border-border/50 flex justify-between items-center gap-2 flex-wrap">
                 <div className="flex items-center gap-2">
                   <div className={`w-2 h-2 rounded-full animate-pulse ${group.status === 'متاحة' ? 'bg-accent-green shadow-[0_0_8px_var(--accent-green)]' : 'bg-accent-red shadow-[0_0_8px_var(--accent-red)]'}`} />
                   <span className="text-[10px] font-black uppercase tracking-widest text-text-muted">{group.status}</span>
                 </div>
-                <button
-                  onClick={() => setExpandedGroup(expandedGroup === group._id ? null : group._id)}
-                  className="flex items-center gap-2 text-xs font-black text-accent-blue hover:text-accent-blue-light transition-all px-3 py-1.5 rounded-xl bg-accent-blue/5 hover:bg-accent-blue/10 border border-accent-blue/10"
-                >
-                  <Users size={14} />
-                  <span>الطلاب ({group.enrolledStudents.length})</span>
-                  {expandedGroup === group._id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                </button>
+                <div className="flex items-center gap-2">
+                  {/* Send Files Button */}
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => navigate(`/teacher/groups/${group._id}/files`)}
+                    className="flex items-center gap-1.5 text-xs font-black text-accent-green hover:text-white transition-all px-3 py-1.5 rounded-xl bg-accent-green/10 hover:bg-accent-green border border-accent-green/20"
+                  >
+                    <FolderOpen size={13} />
+                    <span>إرسال ملفات</span>
+                  </motion.button>
+                  {/* Students Button */}
+                  <button
+                    onClick={() => setExpandedGroup(expandedGroup === group._id ? null : group._id)}
+                    className="flex items-center gap-2 text-xs font-black text-accent-blue hover:text-accent-blue-light transition-all px-3 py-1.5 rounded-xl bg-accent-blue/5 hover:bg-accent-blue/10 border border-accent-blue/10"
+                  >
+                    <Users size={14} />
+                    <span>الطلاب ({group.enrolledStudents.length})</span>
+                    {expandedGroup === group._id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                  </button>
+                </div>
               </div>
+
 
               {/* Students List (expanded) */}
               <AnimatePresence>
