@@ -27,6 +27,7 @@ import TeacherGroupsPage from './pages/teacher/TeacherGroupsPage';
 import TeacherAssignmentsPage from './pages/teacher/TeacherAssignmentsPage';
 import GroupFilesPage from './pages/teacher/GroupFilesPage';
 import StudentGroupsPage from './pages/student/StudentGroupsPage';
+import StudentGroupFilesPage from './pages/student/StudentGroupFilesPage';
 import TeacherExamsPage from './pages/teacher/TeacherExamsPage';
 import OnlineExamPage from './pages/student/OnlineExamPage';
 import StudentExamsPage from './pages/student/StudentExamsPage';
@@ -106,10 +107,11 @@ function App() {
           <Route index element={<StudentDashboard />} />
           <Route path="subjects" element={<StudentSubjectsPage />} />
           <Route path="groups" element={<StudentGroupsPage />} />
+          <Route path="groups/:groupId/files" element={<StudentGroupFilesPage />} />
+          <Route path="assignments" element={<StudentAssignmentsPage />} />
           <Route path="grades" element={<StudentGradesPage />} />
           <Route path="attendance" element={<StudentAttendancePage />} />
           <Route path="exams" element={<StudentExamsPage />} />
-          <Route path="assignments" element={<StudentAssignmentsPage />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
         

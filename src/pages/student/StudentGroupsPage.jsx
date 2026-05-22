@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
-import { UsersRound, MapPin, Clock, CalendarDays, CheckCircle2, AlertCircle, ArrowRight, BookOpen, GraduationCap, Users, Loader2, Star, X } from 'lucide-react';
+import { UsersRound, MapPin, Clock, CalendarDays, CheckCircle2, AlertCircle, ArrowRight, BookOpen, GraduationCap, Users, Loader2, Star, X, FolderOpen } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../api/axios';
 
@@ -18,6 +19,7 @@ const formatTime12h = (time24) => {
 
 const StudentGroupsPage = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [groups, setGroups] = useState([]);
   const [studentProfile, setStudentProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -169,13 +171,22 @@ const StudentGroupsPage = () => {
 
                 <div className="p-8 pt-0 mt-auto">
                   {isEnrolled ? (
-                    <button 
-                      onClick={() => handleCancelEnroll(group._id)} 
-                      className="w-full bg-accent-red/5 hover:bg-accent-red text-accent-red hover:text-white border border-accent-red/10 font-black py-4 rounded-2xl transition-all flex items-center justify-center gap-2 group/cancel"
-                    >
-                      <span>إلغاء الاشتراك</span>
-                      <X size={20} className="transition-transform group-hover/cancel:rotate-90" />
-                    </button>
+                    <div className="flex flex-col gap-3">
+                      <button 
+                        onClick={() => navigate(`/student/groups/${group._id}/files`)} 
+                        className="w-full bg-accent-blue/10 hover:bg-accent-blue/20 text-accent-blue border border-accent-blue/20 font-black py-4 rounded-2xl transition-all flex items-center justify-center gap-2 group/files"
+                      >
+                        <FolderOpen size={20} className="transition-transform group-hover/files:scale-110" />
+                        <span>تصفح ملفات المجموعة</span>
+                      </button>
+                      <button 
+                        onClick={() => handleCancelEnroll(group._id)} 
+                        className="w-full bg-accent-red/5 hover:bg-accent-red text-accent-red hover:text-white border border-accent-red/10 font-black py-3 rounded-2xl transition-all flex items-center justify-center gap-2 group/cancel"
+                      >
+                        <span>إلغاء الاشتراك</span>
+                        <X size={18} className="transition-transform group-hover/cancel:rotate-90" />
+                      </button>
+                    </div>
                   ) : isFull ? (
                     <button 
                       disabled 
