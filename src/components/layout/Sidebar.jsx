@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import {
   LayoutDashboard, Users, GraduationCap, BookOpen, ChevronRight,
   LogOut, Settings, Menu, X, BarChart3, ClipboardList, Bell,
-  BookMarked, Award, Calendar, FileText, ChevronLeft, UsersRound
+  BookMarked, Award, Calendar, FileText, ChevronLeft, UsersRound, FolderOpen
 } from 'lucide-react';
 
 const adminNavItems = [
@@ -25,6 +25,7 @@ const teacherNavItems = [
   { icon: Award, label: 'الدرجات', to: '/teacher/grades' },
   { icon: FileText, label: 'الامتحانات', to: '/teacher/exams' },
   { icon: BookOpen, label: 'الواجبات', to: '/teacher/assignments' },
+  { icon: FolderOpen, label: 'مشاركة الملفات', to: '/teacher/files' },
   { icon: Settings, label: 'ملفي', to: '/teacher/profile' },
 ];
 
@@ -36,6 +37,7 @@ const studentNavItems = [
   { icon: Calendar, label: 'حضوري', to: '/student/attendance' },
   { icon: FileText, label: 'الامتحانات', to: '/student/exams' },
   { icon: BookOpen, label: 'الواجبات', to: '/student/assignments' },
+  { icon: FolderOpen, label: 'مكتبة الملفات', to: '/student/files' },
   { icon: Settings, label: 'ملفي', to: '/student/profile' },
 ];
 
