@@ -29,15 +29,15 @@ const StudentAttendancePage = () => {
       <motion.div 
         initial={{ opacity: 0, y: -20 }} 
         animate={{ opacity: 1, y: 0 }} 
-        className="mb-12 relative"
+        className="mb-8 md:mb-12 relative"
       >
         <div className="absolute -top-12 -right-12 w-48 h-48 bg-accent-green/5 blur-[80px] rounded-full -z-10" />
-        <h1 className="text-4xl font-black text-text-primary mb-3">سجل الحضور والغياب</h1>
-        <p className="text-text-secondary max-w-2xl text-lg font-medium">تابع التزامك الدراسي ونسبة حضورك في جميع المحاضرات والحصص الدراسية.</p>
+        <h1 className="text-3xl md:text-4xl font-black text-text-primary mb-3">سجل الحضور والغياب</h1>
+        <p className="text-text-secondary max-w-2xl text-base md:text-lg font-medium">تابع التزامك الدراسي ونسبة حضورك في جميع المحاضرات والحصص الدراسية.</p>
       </motion.div>
 
       {/* Stats Summary Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 md:mb-12">
         {[
           { label: 'إجمالي الحصص', value: stats.total || 0, icon: <Calendar size={24} />, color: 'text-accent-blue', bg: 'bg-accent-blue/10' },
           { label: 'أيام الحضور', value: stats.present || 0, icon: <CheckCircle size={24} />, color: 'text-accent-green', bg: 'bg-accent-green/10' },
@@ -49,13 +49,13 @@ const StudentAttendancePage = () => {
             initial={{ opacity: 0, scale: 0.95 }} 
             animate={{ opacity: 1, scale: 1 }} 
             transition={{ delay: i * 0.1 }}
-            className="bg-bg-card border border-border rounded-3xl p-6 flex flex-col gap-4 shadow-lg group hover:border-accent-blue/30 transition-all duration-300"
+            className="bg-bg-card border border-border rounded-3xl p-5 md:p-6 flex flex-col gap-4 shadow-lg group hover:border-accent-blue/30 transition-all duration-300"
           >
             <div className={`w-12 h-12 rounded-2xl ${s.bg} ${s.color} flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform`}>
               {s.icon}
             </div>
             <div>
-              <div className="text-3xl font-black text-text-primary mb-1">{s.value}</div>
+              <div className="text-2xl md:text-3xl font-black text-text-primary mb-1">{s.value}</div>
               <div className="text-xs font-black text-text-secondary uppercase tracking-widest">{s.label}</div>
             </div>
           </motion.div>
@@ -63,18 +63,19 @@ const StudentAttendancePage = () => {
       </div>
 
       {/* Attendance History */}
-      <div className="bg-bg-card border border-border rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col">
-        <div className="p-8 border-b border-border bg-bg-card/50 flex justify-between items-center">
-           <h3 className="text-xl font-black text-text-primary flex items-center gap-3">
+      <div className="bg-bg-card border border-border rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col">
+        <div className="p-6 md:p-8 border-b border-border bg-bg-card/50 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+           <h3 className="text-lg md:text-xl font-black text-text-primary flex items-center gap-3">
               <Layers className="text-accent-blue" size={24} />
               تفاصيل السجل الدراسي
            </h3>
-           <div className="text-xs font-black text-text-muted uppercase tracking-[0.2em] bg-white/5 px-4 py-2 rounded-full border border-white/5">
+           <div className="text-[10px] sm:text-xs font-black text-text-muted uppercase tracking-[0.2em] bg-white/5 px-4 py-2 rounded-full border border-white/5 w-fit">
               إجمالي السجلات: <span className="text-accent-blue">{attendance.length}</span>
            </div>
         </div>
 
-        <div className="overflow-x-auto">
+        {/* Desktop View: Table */}
+        <div className="overflow-x-auto hidden md:block">
           <table className="w-full text-right">
             <thead>
               <tr className="bg-white/[0.02] border-b border-border/50">
@@ -141,6 +142,62 @@ const StudentAttendancePage = () => {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile View: Cards List */}
+        <div className="md:hidden flex flex-col divide-y divide-white/5">
+          {attendance.length === 0 ? (
+            <div className="px-6 py-16 text-center">
+              <div className="text-6xl mb-4 opacity-20">📅</div>
+              <p className="text-text-secondary font-black text-base">لا يوجد سجل حضور مسجل لك حالياً</p>
+            </div>
+          ) : (
+            attendance.map((a, idx) => (
+              <motion.div 
+                key={a._id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.05 }}
+                className="p-5 flex flex-col gap-4 hover:bg-white/[0.01] transition-colors"
+              >
+                {/* Subject & Status */}
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-accent-blue/10 flex items-center justify-center text-base shrink-0">📚</div>
+                    <div className="font-black text-text-primary text-sm leading-tight">{a.subject?.name}</div>
+                  </div>
+                  <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all ${
+                    a.status === 'حاضر' 
+                    ? 'bg-accent-green/10 text-accent-green border-accent-green/20' 
+                    : a.status === 'غائب' 
+                      ? 'bg-accent-red/10 text-accent-red border-accent-red/20' 
+                      : 'bg-accent-yellow/10 text-accent-yellow border-accent-yellow/20'
+                  }`}>
+                    {a.status}
+                  </span>
+                </div>
+
+                {/* Date & Teacher */}
+                <div className="flex justify-between items-center mt-1">
+                  <span className="text-xs font-bold text-text-secondary bg-white/5 px-2.5 py-1 rounded-lg border border-white/5">
+                    {new Date(a.date).toLocaleDateString('ar-EG', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </span>
+                  
+                  <div className="flex items-center gap-2">
+                    <div className="text-right">
+                      <div className="text-xs font-black text-text-primary leading-none mb-1">{a.teacher?.name || 'مدرس المادة'}</div>
+                      <div className="text-[9px] font-black text-text-muted uppercase tracking-widest">معلم مسؤول</div>
+                    </div>
+                    <img 
+                      src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${a.teacher?.name}`} 
+                      className="w-8 h-8 rounded-xl border border-accent-blue/20"
+                      alt="" 
+                    />
+                  </div>
+                </div>
+              </motion.div>
+            ))
+          )}
         </div>
       </div>
     </div>

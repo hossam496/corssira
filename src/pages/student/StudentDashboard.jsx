@@ -113,7 +113,7 @@ const StudentDashboard = () => {
             initial={{ opacity: 0, scale: 0.95 }} 
             animate={{ opacity: 1, scale: 1 }} 
             transition={{ delay: i * 0.1 }}
-            className="bg-bg-card border border-border rounded-3xl p-6 flex flex-col gap-4 shadow-lg group hover:border-accent-blue/30 transition-all duration-300"
+            className="bg-bg-card border border-border rounded-3xl p-5 md:p-6 flex flex-col gap-4 shadow-lg group hover:border-accent-blue/30 transition-all duration-300"
           >
             <div className="flex justify-between items-start">
                 <div className={`w-12 h-12 rounded-2xl ${stat.bg} ${stat.color} flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform`}>
@@ -124,7 +124,7 @@ const StudentDashboard = () => {
                 </div>
             </div>
             <div>
-              <div className="text-3xl font-black text-text-primary mb-1">{stat.value}</div>
+              <div className="text-2xl md:text-3xl font-black text-text-primary mb-1">{stat.value}</div>
               <div className="text-xs font-black text-text-secondary uppercase tracking-widest">{stat.label}</div>
             </div>
           </motion.div>
@@ -136,17 +136,17 @@ const StudentDashboard = () => {
         <motion.div 
           initial={{ opacity: 0, scale: 0.98 }} 
           animate={{ opacity: 1, scale: 1 }} 
-          className="lg:col-span-2 bg-bg-card border border-border rounded-3xl md:rounded-[2.5rem] p-6 md:p-8 shadow-xl flex flex-col"
+          className="lg:col-span-2 bg-bg-card border border-border rounded-3xl md:rounded-[2.5rem] p-5 md:p-8 shadow-xl flex flex-col"
         >
           <div className="flex justify-between items-center mb-8">
-            <h3 className="text-lg md:text-xl font-black text-text-primary">مخطط الأداء الدراسي</h3>
+            <h3 className="text-base md:text-xl font-black text-text-primary">مخطط الأداء الدراسي</h3>
             <NavLink to="/student/grades" className="w-10 h-10 bg-white/5 border border-border rounded-xl flex items-center justify-center text-text-muted hover:text-accent-blue hover:bg-accent-blue/10 transition-all">
               <ChevronLeft size={20} />
             </NavLink>
           </div>
-          <div className="h-[300px] w-full">
+          <div className="h-[260px] md:h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={gradeChartData}>
+              <AreaChart data={gradeChartData} margin={{ top: 10, right: 5, left: 5, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorGrade" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="var(--accent-blue)" stopOpacity={0.3}/>
@@ -171,19 +171,19 @@ const StudentDashboard = () => {
         <motion.div 
           initial={{ opacity: 0, scale: 0.98 }} 
           animate={{ opacity: 1, scale: 1 }} 
-          className="bg-bg-card border border-border rounded-3xl md:rounded-[2.5rem] p-6 md:p-8 shadow-xl flex flex-col"
+          className="bg-bg-card border border-border rounded-3xl md:rounded-[2.5rem] p-5 md:p-8 shadow-xl flex flex-col"
         >
-          <h3 className="text-lg md:text-xl font-black text-text-primary mb-8">سجل الحضور</h3>
-          <div className="flex-1 flex flex-col justify-center gap-8">
+          <h3 className="text-base md:text-xl font-black text-text-primary mb-6 md:mb-8">سجل الحضور</h3>
+          <div className="flex-1 flex flex-col justify-center gap-5 md:gap-8">
             {[
               { label: 'حاضر', value: attendance.stats.present || 0, total: attendance.stats.total || 1, color: 'bg-accent-green', text: 'text-accent-green' },
               { label: 'غائب', value: attendance.stats.absent || 0, total: attendance.stats.total || 1, color: 'bg-accent-red', text: 'text-accent-red' },
               { label: 'متأخر', value: attendance.stats.late || 0, total: attendance.stats.total || 1, color: 'bg-accent-yellow', text: 'text-accent-yellow' },
             ].map(({ label, value, total, color, text }) => (
-              <div key={label} className="space-y-3">
+              <div key={label} className="space-y-2 md:space-y-3">
                 <div className="flex justify-between items-end">
-                  <span className="text-sm font-black text-text-secondary uppercase tracking-widest">{label}</span>
-                  <span className={`text-base font-black ${text}`}>{value} أيام</span>
+                  <span className="text-xs md:text-sm font-black text-text-secondary uppercase tracking-widest">{label}</span>
+                  <span className={`text-sm md:text-base font-black ${text}`}>{value} أيام</span>
                 </div>
                 <div className="h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
                   <div 
@@ -201,70 +201,113 @@ const StudentDashboard = () => {
       <motion.div 
         initial={{ opacity: 0, y: 20 }} 
         animate={{ opacity: 1, y: 0 }} 
-        className="bg-bg-card border border-border rounded-3xl md:rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col"
+        className="bg-bg-card border border-border rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col"
       >
-        <div className="p-6 md:p-8 border-b border-border bg-bg-card/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <h3 className="text-lg md:text-xl font-black text-text-primary flex items-center gap-3">
+        <div className="p-5 md:p-8 border-b border-border bg-bg-card/50 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+          <h3 className="text-base md:text-xl font-black text-text-primary flex items-center gap-3">
              <Award className="text-accent-blue" size={24} />
              آخر الدرجات المرصودة
           </h3>
-          <NavLink to="/student/grades" className="text-accent-blue hover:text-accent-blue-light text-xs font-black uppercase tracking-wider flex items-center gap-1 transition-colors">
+          <NavLink to="/student/grades" className="text-accent-blue hover:text-accent-blue-light text-xs font-black uppercase tracking-wider flex items-center gap-1 transition-colors w-fit">
             عرض الكل <ArrowRight size={14} className="rotate-180" />
           </NavLink>
         </div>
         <div className="overflow-x-auto">
           {grades.length === 0 ? (
-            <div className="py-24 text-center">
-               <div className="text-7xl mb-6 opacity-20">📊</div>
-               <p className="text-text-secondary font-black text-lg">لا توجد نتائج مسجلة حتى الآن</p>
+            <div className="py-16 md:py-24 text-center">
+               <div className="text-6xl md:text-7xl mb-6 opacity-20">📊</div>
+               <p className="text-text-secondary font-black text-base md:text-lg">لا توجد نتائج مسجلة حتى الآن</p>
             </div>
           ) : (
-            <table className="w-full text-right">
-              <thead>
-                <tr className="bg-white/[0.02] border-b border-border/50">
-                  <th className="px-8 py-5 text-xs font-black text-text-muted uppercase tracking-widest">المادة</th>
-                  <th className="px-8 py-5 text-xs font-black text-text-muted uppercase tracking-widest">التقييم</th>
-                  <th className="px-8 py-5 text-xs font-black text-text-muted uppercase tracking-widest text-center">الدرجة</th>
-                  <th className="px-8 py-5 text-xs font-black text-text-muted uppercase tracking-widest text-left">التقدير</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5">
+            <>
+              {/* Desktop View Table */}
+              <table className="w-full text-right hidden md:table">
+                <thead>
+                  <tr className="bg-white/[0.02] border-b border-border/50">
+                    <th className="px-8 py-5 text-xs font-black text-text-muted uppercase tracking-widest">المادة</th>
+                    <th className="px-8 py-5 text-xs font-black text-text-muted uppercase tracking-widest">التقييم</th>
+                    <th className="px-8 py-5 text-xs font-black text-text-muted uppercase tracking-widest text-center">الدرجة</th>
+                    <th className="px-8 py-5 text-xs font-black text-text-muted uppercase tracking-widest text-left">التقدير</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {grades.slice(0, 5).map((g, idx) => (
+                    <motion.tr 
+                      key={g._id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: idx * 0.05 }}
+                      className="hover:bg-white/[0.02] transition-colors group"
+                    >
+                      <td className="px-8 py-5">
+                        <div className="flex items-center gap-4">
+                           <div className="w-10 h-10 rounded-xl bg-accent-blue/10 flex items-center justify-center text-lg shrink-0 group-hover:scale-110 transition-transform">📚</div>
+                           <span className="font-black text-text-primary text-base group-hover:text-accent-blue transition-colors">{g.subject?.name}</span>
+                        </div>
+                      </td>
+                      <td className="px-8 py-5">
+                        <span className="text-xs font-bold text-text-secondary bg-white/5 px-3 py-1 rounded-full border border-white/5">{g.examTitle}</span>
+                      </td>
+                      <td className="px-8 py-5 text-center">
+                        <div className="flex items-baseline justify-center gap-1">
+                          <span className="text-xl font-black text-text-primary leading-none">{g.score}</span>
+                          <span className="text-[10px] font-black text-text-muted uppercase">/{g.totalScore}</span>
+                        </div>
+                      </td>
+                      <td className="px-8 py-5 text-left">
+                         <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${
+                           ['امتياز', 'جيد جداً', 'جيد', 'مقبول'].includes(g.status) 
+                           ? 'bg-accent-green/10 text-accent-green border-accent-green/20' 
+                           : 'bg-accent-red/10 text-accent-red border-accent-red/20'
+                         }`}>
+                          {g.status}
+                        </span>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {/* Mobile View Cards List */}
+              <div className="md:hidden flex flex-col divide-y divide-white/5">
                 {grades.slice(0, 5).map((g, idx) => (
-                  <motion.tr 
+                  <motion.div 
                     key={g._id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.05 }}
-                    className="hover:bg-white/[0.02] transition-colors group"
+                    className="p-5 flex flex-col gap-4 hover:bg-white/[0.01] transition-colors"
                   >
-                    <td className="px-8 py-5">
-                      <div className="flex items-center gap-4">
-                         <div className="w-10 h-10 rounded-xl bg-accent-blue/10 flex items-center justify-center text-lg shrink-0 group-hover:scale-110 transition-transform">📚</div>
-                         <span className="font-black text-text-primary text-base group-hover:text-accent-blue transition-colors">{g.subject?.name}</span>
+                    {/* Subject & Grade Status */}
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-xl bg-accent-blue/10 flex items-center justify-center text-base shrink-0">📚</div>
+                        <span className="font-black text-text-primary text-sm leading-tight">{g.subject?.name}</span>
                       </div>
-                    </td>
-                    <td className="px-8 py-5">
-                      <span className="text-xs font-bold text-text-secondary bg-white/5 px-3 py-1 rounded-full border border-white/5">{g.examTitle}</span>
-                    </td>
-                    <td className="px-8 py-5 text-center">
-                      <div className="flex items-baseline justify-center gap-1">
-                        <span className="text-xl font-black text-text-primary leading-none">{g.score}</span>
-                        <span className="text-[10px] font-black text-text-muted uppercase">/{g.totalScore}</span>
-                      </div>
-                    </td>
-                    <td className="px-8 py-5 text-left">
-                       <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all ${
-                         ['امتياز', 'جيد جداً', 'جيد', 'مقبول'].includes(g.status) 
-                         ? 'bg-accent-green/10 text-accent-green border-accent-green/20' 
-                         : 'bg-accent-red/10 text-accent-red border-accent-red/20'
-                       }`}>
+                      <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all ${
+                        ['امتياز', 'جيد جداً', 'جيد', 'مقبول'].includes(g.status) 
+                        ? 'bg-accent-green/10 text-accent-green border-accent-green/20' 
+                        : 'bg-accent-red/10 text-accent-red border-accent-red/20'
+                      }`}>
                         {g.status}
                       </span>
-                    </td>
-                  </motion.tr>
+                    </div>
+
+                    {/* Evaluation Title & Score */}
+                    <div className="flex justify-between items-center mt-1">
+                      <span className="text-xs font-bold text-text-secondary bg-white/5 px-2.5 py-1 rounded-lg border border-white/5">
+                        {g.examTitle}
+                      </span>
+                      
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-lg font-black text-text-primary leading-none">{g.score}</span>
+                        <span className="text-[9px] font-black text-text-muted uppercase">/{g.totalScore}</span>
+                      </div>
+                    </div>
+                  </motion.div>
                 ))}
-              </tbody>
-            </table>
+              </div>
+            </>
           )}
         </div>
       </motion.div>
