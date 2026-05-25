@@ -32,6 +32,8 @@ import TeacherExamsPage from './pages/teacher/TeacherExamsPage';
 import OnlineExamPage from './pages/student/OnlineExamPage';
 import StudentExamsPage from './pages/student/StudentExamsPage';
 import StudentAssignmentsPage from './pages/student/StudentAssignmentsPage';
+import TeacherHomeworkPage from './pages/teacher/TeacherHomeworkPage';
+import StudentHomeworkPage from './pages/student/StudentHomeworkPage';
 
 // Protected Route
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -99,6 +101,7 @@ function App() {
           <Route path="grades" element={<TeacherGradesPage />} />
           <Route path="exams" element={<TeacherExamsPage />} />
           <Route path="assignments" element={<TeacherAssignmentsPage />} />
+          <Route path="homeworks" element={<TeacherHomeworkPage />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
 
@@ -109,6 +112,7 @@ function App() {
           <Route path="groups" element={<StudentGroupsPage />} />
           <Route path="groups/:groupId/files" element={<StudentGroupFilesPage />} />
           <Route path="assignments" element={<StudentAssignmentsPage />} />
+          <Route path="homeworks" element={<StudentHomeworkPage />} />
           <Route path="grades" element={<StudentGradesPage />} />
           <Route path="attendance" element={<StudentAttendancePage />} />
           <Route path="exams" element={<StudentExamsPage />} />

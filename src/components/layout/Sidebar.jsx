@@ -24,7 +24,8 @@ const teacherNavItems = [
   { icon: ClipboardList, label: 'الحضور', to: '/teacher/attendance' },
   { icon: Award, label: 'الدرجات', to: '/teacher/grades' },
   { icon: FileText, label: 'الامتحانات', to: '/teacher/exams' },
-  { icon: BookOpen, label: 'الواجبات', to: '/teacher/assignments' },
+  { icon: BookOpen, label: 'الامتحانات التفاعلية', to: '/teacher/assignments' },
+  { icon: FileText, label: 'الواجبات والملفات', to: '/teacher/homeworks' },
   { icon: Settings, label: 'ملفي', to: '/teacher/profile' },
 ];
 
@@ -35,7 +36,8 @@ const studentNavItems = [
   { icon: Award, label: 'درجاتي', to: '/student/grades' },
   { icon: Calendar, label: 'حضوري', to: '/student/attendance' },
   { icon: FileText, label: 'الامتحانات', to: '/student/exams' },
-  { icon: BookOpen, label: 'الواجبات', to: '/student/assignments' },
+  { icon: BookOpen, label: 'الامتحانات التفاعلية', to: '/student/assignments' },
+  { icon: FileText, label: 'الواجبات والملفات', to: '/student/homeworks' },
   { icon: Settings, label: 'ملفي', to: '/student/profile' },
 ];
 
