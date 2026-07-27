@@ -34,6 +34,7 @@ import StudentExamsPage from './pages/student/StudentExamsPage';
 import StudentAssignmentsPage from './pages/student/StudentAssignmentsPage';
 import TeacherFilesPage from './pages/teacher/TeacherFilesPage';
 import StudentFilesPage from './pages/student/StudentFilesPage';
+import ChatPage from './pages/shared/ChatPage';
 
 // Protected Route
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -54,6 +55,12 @@ const PublicRoute = ({ children }) => {
     return <Navigate to="/student" replace />;
   }
   return children;
+};
+
+const ChatRedirect = () => {
+  const { user } = useAuth();
+  if (user?.role === 'teacher') return <Navigate to="/teacher/chat" replace />;
+  return <Navigate to="/student/chat" replace />;
 };
 
 function App() {
@@ -93,6 +100,7 @@ function App() {
         {/* Teacher */}
         <Route path="/teacher" element={<ProtectedRoute allowedRoles={['teacher']}><DashboardLayout role="teacher" /></ProtectedRoute>}>
           <Route index element={<TeacherDashboard />} />
+          <Route path="chat" element={<ChatPage />} />
           <Route path="students" element={<TeacherStudentsPage />} />
           <Route path="subjects" element={<TeacherSubjectsPage />} />
           <Route path="groups" element={<TeacherGroupsPage />} />
@@ -108,6 +116,7 @@ function App() {
         {/* Student */}
         <Route path="/student" element={<ProtectedRoute allowedRoles={['student']}><DashboardLayout role="student" /></ProtectedRoute>}>
           <Route index element={<StudentDashboard />} />
+          <Route path="chat" element={<ChatPage />} />
           <Route path="subjects" element={<StudentSubjectsPage />} />
           <Route path="groups" element={<StudentGroupsPage />} />
           <Route path="groups/:groupId/files" element={<StudentGroupFilesPage />} />
@@ -121,6 +130,9 @@ function App() {
         
         {/* Fullscreen Exam Route - Outside Dashboard Layout */}
         <Route path="/student/exam/:examId" element={<ProtectedRoute allowedRoles={['student']}><OnlineExamPage /></ProtectedRoute>} />
+
+        {/* Global Chat Route */}
+        <Route path="/chat" element={<ProtectedRoute allowedRoles={['teacher', 'student']}><ChatRedirect /></ProtectedRoute>} />
 
         {/* 404 */}
         <Route path="*" element={<NotFoundPage />} />

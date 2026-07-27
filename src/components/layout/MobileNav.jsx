@@ -3,11 +3,12 @@ import { motion } from 'framer-motion';
 import { 
   LayoutDashboard, BookOpen, FileText, Bell, 
   Settings, Calendar, Award, GraduationCap, UsersRound, 
-  ClipboardList, BookMarked, Users, FolderOpen
+  ClipboardList, BookMarked, Users, FolderOpen, MessageSquare
 } from 'lucide-react';
 
 const studentItems = [
   { icon: LayoutDashboard, label: 'لوحتي', to: '/student' },
+  { icon: MessageSquare, label: 'المحادثات', to: '/student/chat' },
   { icon: BookMarked, label: 'موادي', to: '/student/subjects' },
   { icon: UsersRound, label: 'المجموعات', to: '/student/groups' },
   { icon: Award, label: 'درجاتي', to: '/student/grades' },
@@ -20,6 +21,7 @@ const studentItems = [
 
 const teacherItems = [
   { icon: LayoutDashboard, label: 'لوحتي', to: '/teacher' },
+  { icon: MessageSquare, label: 'المحادثات', to: '/teacher/chat' },
   { icon: GraduationCap, label: 'طلابي', to: '/teacher/students' },
   { icon: BookOpen, label: 'موادي', to: '/teacher/subjects' },
   { icon: UsersRound, label: 'المجموعات', to: '/teacher/groups' },

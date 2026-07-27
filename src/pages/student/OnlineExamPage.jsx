@@ -425,9 +425,20 @@ const OnlineExamPage = () => {
                 </div>
 
                 <div className="bg-slate-900/30 backdrop-blur-[30px] border border-white/10 rounded-[2rem] md:rounded-[3rem] p-6 md:p-16 shadow-2xl mb-8">
-                    <h2 className="text-xl md:text-3xl font-black text-white leading-relaxed mb-8 md:mb-12">
+                    <h2 className="text-xl md:text-3xl font-black text-white leading-relaxed mb-6 md:mb-8">
                         {currentQ.question}
                     </h2>
+
+                    {/* Question Image Attachment */}
+                    {currentQ.image && (
+                        <div className="mb-8 md:mb-12 rounded-2xl md:rounded-[2rem] overflow-hidden border border-white/10 max-h-80 shadow-2xl relative group bg-black/40 p-2">
+                            <img 
+                              src={currentQ.image} 
+                              alt="صورة السؤال" 
+                              className="w-full h-full max-h-80 object-contain mx-auto rounded-xl" 
+                            />
+                        </div>
+                    )}
 
                     <div className="flex flex-col gap-5">
                         {currentQ.type === 'اختيار من متعدد' && currentQ.options.map((opt, i) => (

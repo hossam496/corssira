@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, X, Loader2, Save, FileText, Clock, Settings, Trash2, HelpCircle, List, GraduationCap, Award, BookOpen, User, CheckCircle, Star, Users, Activity, AlertCircle, CalendarDays } from 'lucide-react';
+import { Plus, X, Loader2, Save, FileText, Clock, Settings, Trash2, HelpCircle, List, GraduationCap, Award, BookOpen, User, CheckCircle, Star, Users, Activity, AlertCircle, CalendarDays, Image as ImageIcon } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 import api from '../../api/axios';
@@ -39,6 +39,7 @@ const TeacherExamsPage = () => {
   const [currentQuestion, setCurrentQuestion] = useState({
     type: 'اختيار من متعدد',
     question: '',
+    image: '',
     options: ['', '', '', ''],
     correctAnswer: '',
     correctAnswerIndex: -1,
@@ -89,6 +90,7 @@ const TeacherExamsPage = () => {
     setCurrentQuestion({
       type: 'اختيار من متعدد',
       question: '',
+      image: '',
       options: ['', '', '', ''],
       correctAnswer: '',
       correctAnswerIndex: -1,
@@ -428,8 +430,62 @@ const TeacherExamsPage = () => {
                    </div>
 
                    <div className="space-y-2">
-                      <label className="text-[10px] font-black text-text-secondary mr-1 uppercase tracking-widest">نص السؤال</label>
+                      <label className="text-[10px] font-black text-text-secondary mr-1 uppercase tracking-widest flex items-center justify-between">
+                        <span>نص السؤال</span>
+                        <span className="text-accent-indigo text-[10px] font-bold">يمكنك إرفاق صورة مع السؤال 📷</span>
+                      </label>
                       <textarea className="input bg-bg-secondary h-20 md:h-24 resize-none py-3 text-sm font-bold" placeholder="اكتب السؤال هنا..." value={currentQuestion.question} onChange={e => setCurrentQuestion({...currentQuestion, question: e.target.value})} />
+                   </div>
+
+                   {/* Image Attachment Input for Question */}
+                   <div className="space-y-2">
+                      <label className="text-[10px] font-black text-text-secondary mr-1 uppercase tracking-widest flex items-center gap-2">
+                        <ImageIcon size={14} className="text-accent-purple" /> صورة توضيحية للسؤال (اختياري)
+                      </label>
+                      <div className="flex gap-2 items-center">
+                        <input 
+                          type="file" 
+                          accept="image/*" 
+                          id="q-image-file" 
+                          className="hidden" 
+                          onChange={(e) => {
+                            const file = e.target.files[0];
+                            if (!file) return;
+                            if (file.size > 10 * 1024 * 1024) return toast.error('حجم الصورة كبير جداً (الأقصى 10MB)');
+                            const reader = new FileReader();
+                            reader.onloadend = () => setCurrentQuestion({...currentQuestion, image: reader.result});
+                            reader.readAsDataURL(file);
+                          }}
+                        />
+                        <input 
+                          type="text" 
+                          placeholder="أدخل رابط الصورة أو اختر صورة من جهازك..." 
+                          className="input bg-bg-secondary h-12 text-xs flex-1 font-medium"
+                          value={currentQuestion.image || ''}
+                          onChange={e => setCurrentQuestion({...currentQuestion, image: e.target.value})}
+                        />
+                        <label 
+                          htmlFor="q-image-file"
+                          className="btn btn-ghost bg-white/5 border border-border hover:border-accent-purple text-accent-purple px-4 h-12 rounded-xl text-xs font-black flex items-center gap-1.5 cursor-pointer shrink-0"
+                        >
+                          <ImageIcon size={16} /> اختر صورة
+                        </label>
+                        {currentQuestion.image && (
+                          <button 
+                            type="button" 
+                            onClick={() => setCurrentQuestion({...currentQuestion, image: ''})} 
+                            className="w-12 h-12 rounded-xl bg-accent-red/10 text-accent-red hover:bg-accent-red hover:text-white border border-accent-red/20 flex items-center justify-center transition-all shrink-0"
+                            title="حذف الصورة"
+                          >
+                            <X size={16} />
+                          </button>
+                        )}
+                      </div>
+                      {currentQuestion.image && (
+                        <div className="mt-2 relative max-w-xs rounded-2xl overflow-hidden border border-accent-purple/30 shadow-lg">
+                          <img src={currentQuestion.image} alt="معاينة صورة السؤال" className="max-h-40 w-full object-cover" />
+                        </div>
+                      )}
                    </div>
 
                    {currentQuestion.type === 'اختيار من متعدد' && (
