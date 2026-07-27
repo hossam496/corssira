@@ -5,6 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { UsersRound, Plus, MapPin, Clock, CalendarDays, Trash2, X, BookOpen, GraduationCap, Users, Loader2, UserMinus, ChevronDown, ChevronUp, FolderOpen } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../../api/axios';
+import GroupStudentsModal from '../../components/GroupStudentsModal';
 
 const formatTime12h = (time24) => {
   if (!time24) return '';
@@ -28,6 +29,7 @@ const TeacherGroupsPage = () => {
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedStudentsGroup, setSelectedStudentsGroup] = useState(null);
   const [formData, setFormData] = useState({
     name: '', subject: '', schoolGrade: 'أولى ثانوي', 
     days: [], startTime: '', endTime: '', maxStudents: 20, location: 'Online'
@@ -103,7 +105,28 @@ const TeacherGroupsPage = () => {
     try {
       await api.delete(`/groups/${groupId}/students/${studentId}`);
       toast.success(`تم حذف الطالب بنجاح`);
-      fetchGroups();
+      
+      setGroups(prevGroups => {
+        const updated = prevGroups.map(g => {
+          if (g._id === groupId) {
+            const updatedStudents = (g.enrolledStudents || []).filter(s => s._id !== studentId);
+            const updatedGroup = { ...g, enrolledStudents: updatedStudents };
+            return updatedGroup;
+          }
+          return g;
+        });
+
+        // Update selectedStudentsGroup if open
+        setSelectedStudentsGroup(prevSelected => {
+          if (prevSelected && prevSelected._id === groupId) {
+            const matched = updated.find(g => g._id === groupId);
+            return matched || null;
+          }
+          return prevSelected;
+        });
+
+        return updated;
+      });
     } catch (err) {
       toast.error(err.response?.data?.message || 'حدث خطأ أثناء حذف الطالب');
     }
@@ -202,9 +225,13 @@ const TeacherGroupsPage = () => {
                   </div>
                 </div>
 
-                <div className="pt-6 border-t border-border/10 space-y-3">
+                <div 
+                  onClick={() => setSelectedStudentsGroup(group)}
+                  className="pt-6 border-t border-border/10 space-y-3 cursor-pointer group/cap hover:opacity-90 transition-opacity"
+                  title="اضغط لفتح قائمة الطلاب"
+                >
                   <div className="flex justify-between items-center px-1">
-                    <span className="text-xs font-black text-text-secondary uppercase tracking-widest flex items-center gap-2">
+                    <span className="text-xs font-black text-text-secondary uppercase tracking-widest flex items-center gap-2 group-hover/cap:text-accent-blue transition-colors">
                        <Users size={14} className="text-accent-blue" /> السعة الطلابية
                     </span>
                     <span className={`text-sm font-black ${group.enrolledStudents.length >= group.maxStudents ? 'text-accent-red' : 'text-accent-green'}`}>
@@ -237,58 +264,18 @@ const TeacherGroupsPage = () => {
                     <FolderOpen size={13} />
                     <span>إرسال ملفات</span>
                   </motion.button>
-                  {/* Students Button */}
-                  <button
-                    onClick={() => setExpandedGroup(expandedGroup === group._id ? null : group._id)}
-                    className="flex items-center gap-2 text-xs font-black text-accent-blue hover:text-accent-blue-light transition-all px-3 py-1.5 rounded-xl bg-accent-blue/5 hover:bg-accent-blue/10 border border-accent-blue/10"
+                  {/* Students Popup Button */}
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setSelectedStudentsGroup(group)}
+                    className="flex items-center gap-2 text-xs font-black text-accent-blue hover:text-white transition-all px-3.5 py-1.5 rounded-xl bg-accent-blue/10 hover:bg-accent-blue border border-accent-blue/20 shadow-sm"
                   >
                     <Users size={14} />
                     <span>الطلاب ({group.enrolledStudents.length})</span>
-                    {expandedGroup === group._id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                  </button>
+                  </motion.button>
                 </div>
               </div>
-
-
-              {/* Students List (expanded) */}
-              <AnimatePresence>
-                {expandedGroup === group._id && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.25 }}
-                    className="overflow-hidden border-t border-border/30"
-                  >
-                    <div className="p-6 space-y-2 max-h-64 overflow-y-auto">
-                      {group.enrolledStudents.length === 0 ? (
-                        <p className="text-center text-xs text-text-muted font-bold py-4">لا يوجد طلاب مسجلون بعد</p>
-                      ) : (
-                        group.enrolledStudents.map((student) => (
-                          <div key={student._id} className="flex items-center justify-between bg-white/[0.03] border border-white/5 rounded-2xl px-4 py-3">
-                            <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-xl bg-accent-blue/10 flex items-center justify-center text-sm font-black text-accent-blue">
-                                {student.name?.[0] || '؟'}
-                              </div>
-                              <div>
-                                <p className="text-sm font-black text-text-primary">{student.name}</p>
-                                <p className="text-[10px] text-text-muted font-bold">{student.email}</p>
-                              </div>
-                            </div>
-                            <button
-                              onClick={() => handleRemoveStudent(group._id, student._id, student.name)}
-                              title="حذف الطالب من المجموعة"
-                              className="w-8 h-8 rounded-xl bg-accent-red/5 hover:bg-accent-red text-accent-red hover:text-white border border-accent-red/10 flex items-center justify-center transition-all"
-                            >
-                              <UserMinus size={14} />
-                            </button>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </motion.div>
           ))}
         </div>
@@ -408,6 +395,14 @@ const TeacherGroupsPage = () => {
           </div>
         )}
       </AnimatePresence>
+
+      {/* Group Students Professional Modal */}
+      <GroupStudentsModal
+        isOpen={!!selectedStudentsGroup}
+        onClose={() => setSelectedStudentsGroup(null)}
+        group={selectedStudentsGroup}
+        onRemoveStudent={handleRemoveStudent}
+      />
     </div>
   );
 };
