@@ -168,9 +168,10 @@ const StudentFilesPage = () => {
                       <Eye size={20} />
                     </button>
                     
-                    {/* Secure Download Link via Auth Redirect */}
+                    {/* Secure Download Link via Auth Redirect or Direct URL */}
                     <a
-                      href={getSecureDownloadUrl(file._id)}
+                      href={file.url || getSecureDownloadUrl(file._id)}
+                      download={file.name}
                       target="_blank"
                       rel="noreferrer"
                       className="w-12 h-12 rounded-xl bg-white/10 hover:bg-accent-green text-white flex items-center justify-center transition-all border border-white/20"
@@ -244,7 +245,8 @@ const StudentFilesPage = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <a
-                    href={getSecureDownloadUrl(previewFile._id)}
+                    href={previewFile.url || getSecureDownloadUrl(previewFile._id)}
+                    download={previewFile.name}
                     target="_blank"
                     rel="noreferrer"
                     className="flex items-center gap-1 text-xs font-black text-white bg-accent-blue hover:bg-accent-blue-light px-4 py-2 rounded-xl transition-all"
