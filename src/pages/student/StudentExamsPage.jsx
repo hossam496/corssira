@@ -71,17 +71,21 @@ const StudentExamsPage = () => {
                        <FileText size={20} className="md:w-6 md:h-6" />
                     </div>
                     <span className={`px-2.5 py-1 md:px-3 md:py-1.5 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-widest border ${
-                      (!exam.startTime || new Date() >= new Date(exam.startTime)) && (!exam.endTime || new Date() <= new Date(exam.endTime))
-                      ? 'bg-accent-green/10 text-accent-green border-accent-green/20 animate-pulse'
-                      : (exam.startTime && new Date() < new Date(exam.startTime))
-                        ? 'bg-accent-blue/10 text-accent-blue border-accent-blue/20'
-                        : 'bg-accent-red/10 text-accent-red border-accent-red/20'
+                      exam.hasSubmitted
+                        ? 'bg-accent-indigo/15 text-accent-indigo border-accent-indigo/30'
+                        : (!exam.startTime || new Date() >= new Date(exam.startTime)) && (!exam.endTime || new Date() <= new Date(exam.endTime))
+                          ? 'bg-accent-green/10 text-accent-green border-accent-green/20 animate-pulse'
+                          : (exam.startTime && new Date() < new Date(exam.startTime))
+                            ? 'bg-accent-blue/10 text-accent-blue border-accent-blue/20'
+                            : 'bg-accent-red/10 text-accent-red border-accent-red/20'
                     }`}>
-                      {(!exam.startTime || new Date() >= new Date(exam.startTime)) && (!exam.endTime || new Date() <= new Date(exam.endTime))
-                        ? 'نشط حالياً'
-                        : (exam.startTime && new Date() < new Date(exam.startTime))
-                          ? 'لم يبدأ بعد'
-                          : 'منتهي'}
+                      {exam.hasSubmitted
+                        ? 'تم التسليم ✓'
+                        : (!exam.startTime || new Date() >= new Date(exam.startTime)) && (!exam.endTime || new Date() <= new Date(exam.endTime))
+                          ? 'نشط حالياً'
+                          : (exam.startTime && new Date() < new Date(exam.startTime))
+                            ? 'لم يبدأ بعد'
+                            : 'منتهي'}
                     </span>
                   </div>
                   <h3 className="text-lg md:text-xl font-black text-text-primary mb-2 group-hover:text-accent-blue transition-colors leading-tight line-clamp-2 min-h-[3rem] md:min-h-[3.5rem]">{exam.title}</h3>
@@ -116,13 +120,25 @@ const StudentExamsPage = () => {
                     </div>
                   )}
 
-                  <button 
-                    onClick={() => navigate(`/student/exam/${exam._id}`)}
-                    className="w-full bg-accent-blue hover:bg-accent-blue-light text-white font-black py-3.5 md:py-4 rounded-2xl shadow-xl shadow-accent-blue/20 transition-all flex items-center justify-center gap-2 group/btn text-sm md:text-base"
-                  >
-                    دخول الامتحان 
-                    <ChevronLeft size={18} className="transition-transform group-hover/btn:-translate-x-1 md:w-5 md:h-5" />
-                  </button>
+                  {exam.hasSubmitted ? (
+                    <div className="w-full bg-white/5 border border-accent-indigo/30 p-3.5 md:p-4 rounded-2xl text-center space-y-1">
+                      <div className="text-xs font-black text-accent-indigo flex items-center justify-center gap-1.5">
+                        <CheckCircle size={16} />
+                        <span>تم تسليم هذا الامتحان مسبقاً</span>
+                      </div>
+                      <div className="text-[11px] font-bold text-text-muted">
+                        درجتك المحصلة: <span className="text-accent-green font-black">{exam.userScore}</span> / <span className="text-text-primary font-black">{exam.totalMarks}</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <button 
+                      onClick={() => navigate(`/student/exam/${exam._id}`)}
+                      className="w-full bg-accent-blue hover:bg-accent-blue-light text-white font-black py-3.5 md:py-4 rounded-2xl shadow-xl shadow-accent-blue/20 transition-all flex items-center justify-center gap-2 group/btn text-sm md:text-base"
+                    >
+                      دخول الامتحان 
+                      <ChevronLeft size={18} className="transition-transform group-hover/btn:-translate-x-1 md:w-5 md:h-5" />
+                    </button>
+                  )}
                 </div>
 
                 {/* Footer Warning */}
