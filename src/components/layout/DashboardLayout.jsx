@@ -3,7 +3,6 @@ import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 import MobileNav from './MobileNav';
-import AIChatbot from '../AIChatbot';
 
 const DashboardLayout = ({ role }) => {
   const [collapsed, setCollapsed] = useState(false);
@@ -18,7 +17,6 @@ const DashboardLayout = ({ role }) => {
         </main>
       </div>
       <MobileNav role={role} />
-      <AIChatbot />
     </div>
   );
 };
