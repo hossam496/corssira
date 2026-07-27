@@ -169,14 +169,14 @@ const ChatPage = () => {
   );
 
   return (
-    <div className="page-container max-w-[1400px] h-[calc(100vh-120px)] p-2 sm:p-4 flex flex-col dir-rtl" dir="rtl">
+    <div className="page-container chat-page-container max-w-[1400px] h-[calc(100vh-100px)] p-2 sm:p-4 flex flex-col min-h-0 flex-1 dir-rtl" dir="rtl">
       
       {/* Push Notification Bar */}
       {!pushEnabled && (
         <motion.div 
           initial={{ opacity: 0, y: -10 }} 
           animate={{ opacity: 1, y: 0 }}
-          className="mb-4 bg-gradient-to-r from-accent-blue/15 via-accent-indigo/10 to-transparent border border-accent-blue/30 p-3 sm:p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm font-black text-text-primary"
+          className="mb-4 bg-gradient-to-r from-accent-blue/15 via-accent-indigo/10 to-transparent border border-accent-blue/30 p-3 sm:p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm font-black text-text-primary shrink-0"
         >
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-accent-blue/20 flex items-center justify-center text-accent-blue shrink-0">
@@ -196,15 +196,15 @@ const ChatPage = () => {
       )}
 
       {/* Main Chat Container */}
-      <div className="flex-1 bg-bg-card border border-border/80 rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row h-full">
+      <div className="flex-1 min-h-0 bg-bg-card border border-border/80 rounded-[1.5rem] md:rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row h-full">
         
         {/* Sidebar: Conversations List */}
-        <div className={`w-full md:w-80 lg:w-96 border-b md:border-b-0 md:border-l border-border/60 flex flex-col bg-bg-secondary/30 ${
+        <div className={`w-full md:w-80 lg:w-96 min-h-0 border-b md:border-b-0 md:border-l border-border/60 flex flex-col bg-bg-secondary/30 ${
           selectedContact && !showMobileList ? 'hidden md:flex' : 'flex'
         }`}>
           
           {/* Header & Tabs */}
-          <div className="p-4 sm:p-5 border-b border-border/60 space-y-4">
+          <div className="p-4 sm:p-5 border-b border-border/60 space-y-4 shrink-0">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-black text-text-primary flex items-center gap-2">
                 <MessageSquare className="text-accent-blue" size={24} />
@@ -263,7 +263,7 @@ const ChatPage = () => {
           </div>
 
           {/* List Items */}
-          <div className="flex-1 overflow-y-auto p-3 space-y-2 custom-scrollbar">
+          <div className="flex-1 min-h-0 overflow-y-auto p-3 space-y-2 custom-scrollbar touch-scroll">
             {filteredList.length === 0 ? (
               <div className="py-12 text-center text-text-muted space-y-2">
                 <MessageSquare size={32} className="mx-auto opacity-30" />
@@ -331,14 +331,14 @@ const ChatPage = () => {
         </div>
 
         {/* Main Thread Window */}
-        <div className={`flex-1 flex flex-col bg-bg-card ${
+        <div className={`flex-1 min-h-0 flex flex-col bg-bg-card ${
           !selectedContact && !showMobileList ? 'hidden md:flex' : showMobileList ? 'hidden md:flex' : 'flex'
         }`}>
           
           {selectedContact ? (
             <>
               {/* Thread Header */}
-              <div className="p-4 sm:p-5 border-b border-border/60 bg-gradient-to-r from-accent-blue/10 via-transparent to-transparent flex items-center justify-between gap-4">
+              <div className="p-4 sm:p-5 border-b border-border/60 bg-gradient-to-r from-accent-blue/10 via-transparent to-transparent flex items-center justify-between gap-4 shrink-0">
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => setShowMobileList(true)}
@@ -381,7 +381,7 @@ const ChatPage = () => {
               </div>
 
               {/* Thread Messages */}
-              <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 custom-scrollbar bg-black/10">
+              <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 space-y-4 custom-scrollbar touch-scroll bg-black/10">
                 {messages.length === 0 ? (
                   <div className="py-20 text-center space-y-3">
                     <div className="w-16 h-16 rounded-full bg-accent-blue/10 text-accent-blue mx-auto flex items-center justify-center text-2xl border border-accent-blue/20">

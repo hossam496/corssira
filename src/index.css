@@ -367,3 +367,19 @@ select.input {
   }
 }
 
+/* Mobile Touch & Scroll Fixes for Chat */
+.touch-scroll {
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
+  overscroll-behavior-y: contain !important;
+}
+
+@media (max-width: 768px) {
+  .chat-page-container {
+    padding-top: calc(var(--navbar-height) + 4px) !important;
+    padding-bottom: calc(var(--bottom-nav-height) + 12px) !important;
+    height: calc(100dvh - var(--bottom-nav-height) - 10px) !important;
+    max-height: calc(100dvh - var(--bottom-nav-height) - 10px) !important;
+  }
+}
+
