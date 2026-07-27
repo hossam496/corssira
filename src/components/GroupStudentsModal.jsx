@@ -165,7 +165,7 @@ const GroupStudentsModal = ({ isOpen, onClose, group, onRemoveStudent }) => {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="ابحث بالاسم أو البريد الإلكتروني..."
-                  className="w-full bg-bg-secondary/60 border border-white/10 rounded-2xl py-3 pr-11 pl-10 text-sm text-text-primary placeholder:text-text-muted focus:border-accent-blue focus:outline-none transition-all"
+                  className="w-full bg-bg-secondary/60 border border-white/10 rounded-2xl py-3 pr-11 pl-10 text-sm text-black placeholder:text-text-muted focus:border-accent-blue focus:outline-none transition-all"
                 />
                 {searchTerm && (
                   <button
