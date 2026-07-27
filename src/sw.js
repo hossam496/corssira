@@ -15,26 +15,31 @@ self.addEventListener('activate', (event) => {
 
 // 4. Push Event: Handle incoming notifications
 self.addEventListener('push', (event) => {
-  if (!event.data) return;
-  
-  try {
-    const data = event.data.json();
-    const options = {
-      body: data.message || 'لديك إشعار جديد',
-      icon: '/logo.png',
-      badge: '/logo.png',
-      dir: 'rtl',
-      vibrate: [200, 100, 200],
-      data: { url: data.url || '/' },
-      requireInteraction: true
-    };
-
-    event.waitUntil(
-      self.registration.showNotification(data.title || 'تنبيه', options)
-    );
-  } catch (err) {
-    console.error('Push event error:', err);
+  let data = {};
+  if (event.data) {
+    try {
+      data = event.data.json();
+    } catch (e) {
+      data = { title: 'تنبيه جديد 💬', message: event.data.text() };
+    }
   }
+
+  const title = data.title || 'منصة كورسيرا - رسالة جديدة';
+  const options = {
+    body: data.message || 'لديك رسالة جديدة في الشات',
+    icon: '/logo.png',
+    badge: '/logo.png',
+    dir: 'rtl',
+    vibrate: [200, 100, 200, 100, 200],
+    tag: data.tag || 'corssira-chat-notification',
+    renotify: true,
+    data: { url: data.url || '/chat' },
+    requireInteraction: true
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
 });
 
 // 5. Notification Click Event
