@@ -32,7 +32,9 @@ const RegisterPage = () => {
       <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} style={{ width: '100%', maxWidth: 460 }}>
         <div style={{ background: 'rgba(10,22,40,0.9)', border: '1px solid rgba(59,130,246,0.2)', borderRadius: 24, padding: 40, backdropFilter: 'blur(20px)', boxShadow: '0 40px 80px rgba(0,0,0,0.5)' }}>
           <div style={{ textAlign: 'center', marginBottom: 32 }}>
-            <motion.div animate={{ y: [0,-6,0] }} transition={{ duration: 3, repeat: Infinity }} style={{ width: 70, height: 70, borderRadius: 18, background: 'linear-gradient(135deg, #3b82f6, #6366f1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, margin: '0 auto 16px', boxShadow: '0 0 40px rgba(59,130,246,0.3)' }}>🎓</motion.div>
+            <motion.div animate={{ y: [0,-6,0] }} transition={{ duration: 3, repeat: Infinity }} style={{ width: 80, height: 80, borderRadius: 20, background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', boxShadow: '0 0 40px rgba(59,130,246,0.3)', overflow: 'hidden', padding: 8 }}>
+                <img src="/logo.png" alt="كورسيرا" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              </motion.div>
             <h2 style={{ fontSize: 26, fontWeight: 800, color: '#f0f4ff', fontFamily: 'Cairo, sans-serif', marginBottom: 6 }}>إنشاء حساب جديد</h2>
             <p style={{ color: '#64748b', fontSize: 14, fontFamily: 'Cairo, sans-serif' }}>انضم إلى منصة كورسيرا التعليمية</p>
           </div>

@@ -22,13 +22,14 @@ const SplashScreen = () => (
         animate={{ y: [0, -10, 0] }}
         transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
         style={{
-          width: 90, height: 90, borderRadius: '24px',
-          background: 'linear-gradient(135deg, #3b82f6, #6366f1)',
+          width: 110, height: 110, borderRadius: '28px',
+          background: 'white',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 42, boxShadow: '0 0 60px rgba(59,130,246,0.4)',
+          boxShadow: '0 0 60px rgba(59,130,246,0.4)',
+          padding: 10, overflow: 'hidden',
         }}
       >
-        🎓
+        <img src="/logo.png" alt="كورسيرا" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
       </motion.div>
 
       <div style={{ textAlign: 'center' }}>

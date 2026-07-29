@@ -79,9 +79,11 @@ const Navbar = ({ onMenuToggle, sidebarCollapsed }) => {
         </button>
 
         {/* Mobile Logo */}
-        <div className="flex lg:hidden items-center gap-2 text-xl font-black text-accent-blue">
-           <div className="w-8 h-8 bg-gradient-to-br from-accent-blue to-accent-indigo rounded-lg flex items-center justify-center text-white text-base">🎓</div>
-           <span className="font-cairo">كورسيرا</span>
+        <div className="flex lg:hidden items-center gap-2">
+          <div className="w-9 h-9 bg-white rounded-xl overflow-hidden shadow-md p-1 shrink-0">
+            <img src="/logo.png" alt="كورسيرا" className="w-full h-full object-contain" />
+          </div>
+          <span className="text-base font-black text-accent-blue font-cairo">كورسيرا</span>
         </div>
 
         {/* Search - Responsive */}
