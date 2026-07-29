@@ -153,6 +153,23 @@ const Navbar = ({ onMenuToggle, sidebarCollapsed }) => {
             </AnimatePresence>
           </div>
 
+          {/* Mobile: Avatar + Logout button */}
+          <div className="flex lg:hidden items-center gap-1">
+            <img
+              src={user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`}
+              alt="avatar"
+              onClick={() => navigate(`${rolePrefix}/profile`)}
+              className="w-8 h-8 rounded-full border-2 border-accent-blue/30 object-cover cursor-pointer"
+            />
+            <button
+              onClick={() => { logout(); navigate('/login'); }}
+              className="w-9 h-9 rounded-xl bg-accent-red/10 border border-accent-red/20 text-accent-red flex items-center justify-center transition-all active:scale-95"
+              title="تسجيل الخروج"
+            >
+              <LogOut size={17} />
+            </button>
+          </div>
+
           {/* User Menu */}
           <div ref={userRef} className="relative hidden lg:block">
             <button 
