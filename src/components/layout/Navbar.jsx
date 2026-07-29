@@ -15,7 +15,6 @@ const Navbar = ({ onMenuToggle, sidebarCollapsed }) => {
   const [unread, setUnread] = useState(0);
   const [showNotifs, setShowNotifs] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [search, setSearch] = useState('');
   const notifRef = useRef(null);
   const userRef = useRef(null);
@@ -25,26 +24,19 @@ const Navbar = ({ onMenuToggle, sidebarCollapsed }) => {
       try {
         const { data } = await api.get('/notifications');
         setNotifications(data.data?.slice(0, 5) || []);
-        setUnread(data.data?.filter(n => !n.read).length || 0); // Count unread from data if API unread is missing
+        setUnread(data.data?.filter(n => !n.read).length || 0);
         if (data.unread !== undefined) setUnread(data.unread);
       } catch { /* silent */ }
     };
     fetchNotifs();
-    
-    // Fallback polling for UI updates since we use WebPush now for actual alerts
     const interval = setInterval(fetchNotifs, 15000);
 
-    if (user?._id) {
-      // Ask for push notification permission and subscribe
-      if ('Notification' in window) {
-        Notification.requestPermission().then(permission => {
-          if (permission === 'granted') {
-            subscribeToWebPush();
-          }
-        });
-      }
+    if (user?._id && 'Notification' in window) {
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted') subscribeToWebPush();
+      });
     }
-    
+
     return () => clearInterval(interval);
   }, [user]);
 
@@ -65,60 +57,53 @@ const Navbar = ({ onMenuToggle, sidebarCollapsed }) => {
 
   return (
     <header className="relative">
-      <div 
-        className={`fixed top-0 left-0 right-0 h-[var(--navbar-height)] z-[1000] bg-bg-glass backdrop-blur-xl border-b border-border flex items-center px-5 gap-4 transition-[margin-right] duration-300 ${
+      <div
+        className={`fixed top-0 left-0 right-0 h-[var(--navbar-height)] z-[1000] bg-bg-glass backdrop-blur-xl border-b border-border flex items-center px-4 gap-3 transition-[margin-right] duration-300 ${
           sidebarCollapsed ? 'lg:mr-[var(--sidebar-collapsed)]' : 'lg:mr-[var(--sidebar-width)]'
         }`}
       >
-        {/* Menu toggle - Desktop */}
-        <button 
-          className="btn btn-ghost hidden lg:flex p-2 rounded-xl" 
-          onClick={onMenuToggle}
-        >
+        {/* ── Desktop: menu toggle ── */}
+        <button className="btn btn-ghost hidden lg:flex p-2 rounded-xl" onClick={onMenuToggle}>
           <Menu size={20} />
         </button>
 
-        {/* Mobile Logo */}
-        <div className="flex lg:hidden items-center gap-2">
-          <div className="w-9 h-9 bg-white rounded-xl overflow-hidden shadow-md p-1 shrink-0">
+        {/* ── Mobile: Logo ── */}
+        <div className="flex lg:hidden items-center gap-2 shrink-0">
+          <div className="w-9 h-9 bg-white rounded-xl overflow-hidden shadow-md p-1">
             <img src="/logo.png" alt="كورسيرا" className="w-full h-full object-contain" />
           </div>
           <span className="text-base font-black text-accent-blue font-cairo">كورسيرا</span>
         </div>
 
-        {/* Search - Responsive */}
-        <div className={`flex-1 max-w-[400px] relative lg:block ${showMobileSearch ? 'fixed inset-0 h-[var(--navbar-height)] bg-bg-primary z-[2000] p-3 flex items-center' : 'hidden lg:relative lg:bg-transparent lg:inset-auto lg:h-auto lg:p-0'}`}>
-          <Search size={16} className="absolute right-7 lg:right-3.5 top-1/2 -translate-y-1/2 text-text-muted" />
+        {/* ── Desktop: Search bar ── */}
+        <div className="flex-1 max-w-[400px] relative hidden lg:block">
+          <Search size={16} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-text-muted" />
           <input
-            value={search} 
+            value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="بحث..."
-            className="input pr-12 lg:pr-10 bg-accent-blue/5 h-10 text-sm border-none"
+            className="input pr-10 bg-accent-blue/5 h-10 text-sm border-none"
           />
-          <button className="lg:hidden absolute left-5 top-1/2 -translate-y-1/2 text-text-muted" onClick={() => setShowMobileSearch(false)}>
-             <X size={18} />
-          </button>
         </div>
 
+        {/* ── Right side actions ── */}
         <div className="flex items-center gap-2 mr-auto">
-          {/* Mobile Search Toggle */}
-          <button className="btn btn-ghost lg:hidden w-10 h-10 p-0" onClick={() => setShowMobileSearch(true)}>
-             <Search size={20} />
-          </button>
 
-          {/* Theme Toggle */}
+          {/* Theme toggle — desktop only */}
           <button className="btn btn-ghost hidden lg:flex w-10 h-10 p-0" onClick={toggleTheme}>
             {isDark ? <Sun size={18} /> : <Moon size={18} />}
           </button>
 
-          {/* Notifications */}
+          {/* Notifications — all sizes */}
           <div ref={notifRef} className="relative">
-            <button 
-              className="btn btn-ghost w-10 h-10 p-0 relative" 
+            <button
+              className="btn btn-ghost w-10 h-10 p-0 relative"
               onClick={() => setShowNotifs(p => !p)}
             >
               <Bell size={20} />
-              {unread > 0 && <span className="absolute top-2 right-2 w-2 h-2 bg-accent-red rounded-full border-2 border-bg-card" />}
+              {unread > 0 && (
+                <span className="absolute top-2 right-2 w-2 h-2 bg-accent-red rounded-full border-2 border-bg-card" />
+              )}
             </button>
             <AnimatePresence>
               {showNotifs && (
@@ -128,7 +113,7 @@ const Navbar = ({ onMenuToggle, sidebarCollapsed }) => {
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
                   className="absolute top-[50px] left-0 w-[calc(100vw-32px)] sm:w-[340px] bg-bg-card border border-border rounded-2xl shadow-lg z-[1100] overflow-hidden"
                 >
-                  <div className="p-4 border-b border-border flex justify-between items-center bg-bg-card">
+                  <div className="p-4 border-b border-border flex justify-between items-center">
                     <span className="font-black text-sm text-text-primary">الإشعارات</span>
                     {unread > 0 && <span className="badge badge-blue">{unread} جديد</span>}
                   </div>
@@ -137,9 +122,9 @@ const Navbar = ({ onMenuToggle, sidebarCollapsed }) => {
                       <div className="p-10 text-center text-text-muted text-sm">لا توجد إشعارات حالياً</div>
                     ) : (
                       notifications.map(n => (
-                        <div 
-                          key={n.id} 
-                          onClick={() => markRead(n.id)} 
+                        <div
+                          key={n.id}
+                          onClick={() => markRead(n.id)}
                           className={`p-4 border-b border-white/5 cursor-pointer transition-colors ${n.read ? 'bg-transparent' : 'bg-accent-blue/5'}`}
                         >
                           <div className="text-sm font-black mb-1 text-text-primary">{n.title}</div>
@@ -153,33 +138,25 @@ const Navbar = ({ onMenuToggle, sidebarCollapsed }) => {
             </AnimatePresence>
           </div>
 
-          {/* Mobile: Avatar + Logout button */}
-          <div className="flex lg:hidden items-center gap-1">
-            <img
-              src={user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`}
-              alt="avatar"
-              onClick={() => navigate(`${rolePrefix}/profile`)}
-              className="w-8 h-8 rounded-full border-2 border-accent-blue/30 object-cover cursor-pointer"
-            />
-            <button
-              onClick={() => { logout(); navigate('/login'); }}
-              className="w-9 h-9 rounded-xl bg-accent-red/10 border border-accent-red/20 text-accent-red flex items-center justify-center transition-all active:scale-95"
-              title="تسجيل الخروج"
-            >
-              <LogOut size={17} />
-            </button>
-          </div>
+          {/* ── Mobile: Logout button ── */}
+          <button
+            onClick={() => { logout(); navigate('/login'); }}
+            className="lg:hidden w-10 h-10 rounded-xl bg-accent-red/10 border border-accent-red/25 text-accent-red flex items-center justify-center active:scale-95 transition-all"
+            title="تسجيل الخروج"
+          >
+            <LogOut size={19} />
+          </button>
 
-          {/* User Menu */}
+          {/* ── Desktop: User menu ── */}
           <div ref={userRef} className="relative hidden lg:block">
-            <button 
-              onClick={() => setShowUserMenu(p => !p)} 
+            <button
+              onClick={() => setShowUserMenu(p => !p)}
               className="flex items-center gap-2.5 px-3 py-1 bg-accent-blue/10 border border-border rounded-full cursor-pointer text-text-primary hover:border-accent-blue/30 transition-colors"
             >
-              <img 
-                src={user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`} 
-                alt="avatar" 
-                className="w-8 h-8 rounded-full border-2 border-bg-card object-cover" 
+              <img
+                src={user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.name}`}
+                alt="avatar"
+                className="w-8 h-8 rounded-full border-2 border-bg-card object-cover"
               />
               <span className="text-sm font-bold max-w-[100px] truncate">{user?.name}</span>
               <ChevronDown size={14} className="text-accent-blue" />
@@ -187,20 +164,22 @@ const Navbar = ({ onMenuToggle, sidebarCollapsed }) => {
             <AnimatePresence>
               {showUserMenu && (
                 <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }} 
-                  animate={{ opacity: 1, y: 0, scale: 1 }} 
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
                   className="absolute top-[50px] left-0 w-[200px] bg-bg-card border border-border rounded-xl shadow-lg z-[1100] overflow-hidden"
                 >
                   {[
-                    { icon: User, label: 'ملفي الشخصي', action: () => { navigate(`${rolePrefix}/profile`); setShowUserMenu(false); } },
-                    { icon: Settings, label: 'الإعدادات', action: () => { navigate(`${rolePrefix}/profile`); setShowUserMenu(false); } },
-                    { icon: LogOut, label: 'تسجيل الخروج', action: () => { logout(); navigate('/login'); }, danger: true },
+                    { icon: User,    label: 'ملفي الشخصي', action: () => { navigate(`${rolePrefix}/profile`); setShowUserMenu(false); } },
+                    { icon: Settings, label: 'الإعدادات',   action: () => { navigate(`${rolePrefix}/profile`); setShowUserMenu(false); } },
+                    { icon: LogOut,  label: 'تسجيل الخروج', action: () => { logout(); navigate('/login'); }, danger: true },
                   ].map(({ icon: Icon, label, action, danger }) => (
-                    <button 
-                      key={label} 
-                      onClick={action} 
-                      className={`flex items-center gap-3 w-full px-4 py-3 bg-transparent border-none cursor-pointer text-sm font-bold text-right transition-colors ${danger ? 'text-accent-red hover:bg-accent-red/5' : 'text-text-secondary hover:bg-white/5 hover:text-text-primary'}`}
+                    <button
+                      key={label}
+                      onClick={action}
+                      className={`flex items-center gap-3 w-full px-4 py-3 bg-transparent border-none cursor-pointer text-sm font-bold text-right transition-colors ${
+                        danger ? 'text-accent-red hover:bg-accent-red/5' : 'text-text-secondary hover:bg-white/5 hover:text-text-primary'
+                      }`}
                     >
                       <Icon size={16} />
                       <span>{label}</span>
@@ -210,6 +189,7 @@ const Navbar = ({ onMenuToggle, sidebarCollapsed }) => {
               )}
             </AnimatePresence>
           </div>
+
         </div>
       </div>
     </header>
