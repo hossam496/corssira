@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import api from '../api/axios';
+import { registerPushNotifications, unregisterPushNotifications } from '../utils/pushNotifications';
 
 const AuthContext = createContext(null);
 
@@ -17,6 +18,8 @@ export const AuthProvider = ({ children }) => {
           const { data } = await api.get('/auth/me');
           setUser(data.user);
           localStorage.setItem('corssira_user', JSON.stringify(data.user));
+          // Re-register push for returning users with active sessions
+          setTimeout(() => registerPushNotifications(), 2000);
         } catch {
           logout();
         }
@@ -32,6 +35,8 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('corssira_user', JSON.stringify(data.user));
     setToken(data.token);
     setUser(data.user);
+    // Register push notifications after login
+    setTimeout(() => registerPushNotifications(), 1000);
     return data;
   };
 
@@ -41,10 +46,13 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('corssira_user', JSON.stringify(data.user));
     setToken(data.token);
     setUser(data.user);
+    // Register push notifications after registration
+    setTimeout(() => registerPushNotifications(), 1000);
     return data;
   };
 
   const logout = () => {
+    unregisterPushNotifications();
     localStorage.removeItem('corssira_token');
     localStorage.removeItem('corssira_user');
     setToken(null);
