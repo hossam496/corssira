@@ -2,13 +2,20 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   MessageSquare, Send, Image as ImageIcon, Search, ArrowRight, 
-  Check, CheckCheck, Loader2, Users, Bell, BellOff, X, Eye, 
-  Sparkles, RefreshCw, Paperclip
+  Check, CheckCheck, Loader2, Users, Bell, X, Eye, 
+  Sparkles, RefreshCw
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { subscribeToWebPush } from '../../services/pushService';
 import toast from 'react-hot-toast';
 import api from '../../api/axios';
+
+// Deduplicate messages by _id — keeps latest copy
+const dedupeMessages = (msgs) => {
+  const seen = new Map();
+  msgs.forEach(m => { if (m._id) seen.set(m._id, m); });
+  return Array.from(seen.values());
+};
 
 const formatTime12h = (dateStr) => {
   if (!dateStr) return '';
@@ -92,7 +99,13 @@ const ChatPage = () => {
       const { data } = await api.get('/chat/messages', {
         params: { targetId: selectedContact._id, isGroup }
       });
-      setMessages(data.data || []);
+      const incoming = data.data || [];
+      setMessages(prev => {
+        // Merge optimistic + server messages, server wins on duplicates
+        const merged = dedupeMessages([...prev, ...incoming]);
+        // Remove temp messages whose content already exists in server response
+        return merged.filter(m => !m._tempId || !incoming.some(s => s.content === m.content && s.sender?._id === m.sender?._id));
+      });
       if (!isSilent) {
         setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
       }
@@ -104,11 +117,17 @@ const ChatPage = () => {
   useEffect(() => {
     if (selectedContact) {
       fetchMessages();
-      // Short-poll every 3 seconds for real-time messages
-      const interval = setInterval(() => fetchMessages(true), 3000);
-      return () => clearInterval(interval);
+      // Poll every 1.5s for near-real-time on Vercel (no WebSocket)
+      const msgInterval = setInterval(() => fetchMessages(true), 1500);
+      return () => clearInterval(msgInterval);
     }
   }, [selectedContact, fetchMessages]);
+
+  // Poll conversations list every 5s to keep unread counts fresh
+  useEffect(() => {
+    const convInterval = setInterval(() => fetchConversations(), 5000);
+    return () => clearInterval(convInterval);
+  }, [fetchConversations]);
 
   const handleImageSelect = (e) => {
     const file = e.target.files[0];
@@ -126,31 +145,46 @@ const ChatPage = () => {
     if ((!text.trim() && !imagePreview) || sending || !selectedContact) return;
 
     setSending(true);
-    let uploadedUrl = '';
+    const tempId = `temp_${Date.now()}`;
+    const optimisticMsg = {
+      _tempId: tempId,
+      _id: tempId,
+      sender: { _id: user._id, name: user.name, avatar: user.avatar },
+      content: text.trim(),
+      fileUrl: imagePreview || '',
+      fileType: imagePreview ? 'image' : 'text',
+      read: false,
+      createdAt: new Date().toISOString(),
+    };
 
-    // Convert image preview or upload to Cloudinary if needed
-    if (imagePreview) {
-      uploadedUrl = imagePreview;
-    }
+    // Show message instantly — no waiting for API
+    setMessages(prev => [...prev, optimisticMsg]);
+    const sentText = text.trim();
+    const sentImage = imagePreview;
+    setText('');
+    setImageFile(null);
+    setImagePreview('');
+    setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 50);
 
     try {
       const isGroup = selectedContact.type === 'group';
       const payload = {
         receiverId: !isGroup ? selectedContact._id : undefined,
         groupId: isGroup ? selectedContact._id : undefined,
-        content: text.trim(),
-        fileUrl: uploadedUrl,
-        fileType: uploadedUrl ? 'image' : 'text'
+        content: sentText,
+        fileUrl: sentImage || '',
+        fileType: sentImage ? 'image' : 'text'
       };
 
       const { data } = await api.post('/chat/messages', payload);
-      setMessages(prev => [...prev, data.data]);
-      setText('');
-      setImageFile(null);
-      setImagePreview('');
+      // Replace temp message with real server message
+      setMessages(prev => prev.map(m => m._id === tempId ? data.data : m));
       fetchConversations();
-      setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
     } catch (err) {
+      // Remove optimistic message on failure
+      setMessages(prev => prev.filter(m => m._id !== tempId));
+      setText(sentText);
+      setImagePreview(sentImage);
       toast.error(err.response?.data?.message || 'فشل إرسال الرسالة');
     } finally {
       setSending(false);

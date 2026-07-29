@@ -1,6 +1,13 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import api from '../api/axios';
-import { registerPushNotifications, unregisterPushNotifications } from '../utils/pushNotifications';
+import { subscribeToWebPush } from '../services/pushService';
+
+// Helper: subscribe after login (silent, non-blocking)
+const tryPushSubscribe = () => setTimeout(async () => {
+  if (Notification.permission === 'granted') {
+    await subscribeToWebPush();
+  }
+}, 2000);
 
 const AuthContext = createContext(null);
 
@@ -18,8 +25,8 @@ export const AuthProvider = ({ children }) => {
           const { data } = await api.get('/auth/me');
           setUser(data.user);
           localStorage.setItem('corssira_user', JSON.stringify(data.user));
-          // Re-register push for returning users with active sessions
-          setTimeout(() => registerPushNotifications(), 2000);
+          // Re-subscribe push for returning users with active sessions
+          setTimeout(() => subscribeToWebPush(), 2000);
         } catch {
           logout();
         }
@@ -35,8 +42,8 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('corssira_user', JSON.stringify(data.user));
     setToken(data.token);
     setUser(data.user);
-    // Register push notifications after login
-    setTimeout(() => registerPushNotifications(), 1000);
+    // Subscribe to push after login
+    tryPushSubscribe();
     return data;
   };
 
@@ -46,13 +53,12 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('corssira_user', JSON.stringify(data.user));
     setToken(data.token);
     setUser(data.user);
-    // Register push notifications after registration
-    setTimeout(() => registerPushNotifications(), 1000);
+    // Subscribe to push after registration
+    tryPushSubscribe();
     return data;
   };
 
   const logout = () => {
-    unregisterPushNotifications();
     localStorage.removeItem('corssira_token');
     localStorage.removeItem('corssira_user');
     setToken(null);
