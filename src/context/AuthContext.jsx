@@ -34,6 +34,27 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     };
     verify();
+
+    // Handle SW message: re-save push subscription when browser rotates keys
+    const handleSWMessage = async (event) => {
+      if (event.data?.type === 'PUSH_SUBSCRIPTION_CHANGED') {
+        try {
+          await api.post('/push/subscribe', event.data.subscription);
+          console.log('✅ Push subscription renewed after key rotation');
+        } catch (e) {
+          console.warn('Failed to renew push subscription:', e.message);
+        }
+      }
+    };
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('message', handleSWMessage);
+    }
+    return () => {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.removeEventListener('message', handleSWMessage);
+      }
+    };
   }, []);
 
   const login = async (email, password) => {
